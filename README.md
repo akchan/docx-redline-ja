@@ -1,28 +1,28 @@
 # docx-redline-ja
 
-Word文書（.docx）に、校正の結果をWordの変更履歴として書き込むスキルです。
-Claude Codeのプラグインとして配布しています。
+English version:  [README_en.md](README_en.md)
 
-入力は「どの文字列を」「何に直すか」を1行1件で並べたJSONL（以下、findings）で、出力は変更履歴の入った別のdocxです。
-差分は文字単位で取るので、変更履歴に残るのは実際に変わった文字だけになります。
-これは日本語の文書で効きます。
-単語の境界を空白で見つける方式では、1文字直すだけで文節や文がまるごと削除と挿入になるのです。
+Word文書（.docx）に、日本語文章の校正結果を変更履歴として書き込むスキルです。
+
+英語のような単語の境界に空白を用いる言語を想定した処理では、差分が一見して分かりにくいため、どこが修正されたのかが分かりにくいです。
+
+このスキルは差分を文字単位で取るので、変更履歴に残るのは実際に変わった文字だけになります。このため、修正前後の変更箇所を見比べる必要性が下がり、文章校正の確認、承認作業が効率化されます。
+
+### 適用例
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/example-ja-dark.png">
   <img alt="原文、docx-cli、このスキルの3行の比較。docx-cliは「検出率のが高く」と「画像上で残存がなく画像上Complete Response」を句ごと削除して書き直しているが、このスキルは「の」「で」「画像上」の削除とCとRの小文字化だけを変更履歴にしている。" src="docs/example-ja-light.png" width="720">
 </picture>
-
 同じ2件のfindingsを、docx-cli 0.28.0（`replace --batch`）とこのスキルで入れた結果です。
 docx-cliは一致した句をまるごと削除して書き直しますが、このスキルは変わった文字だけを変更履歴に残します。
-例文は創作で、図は`tools/render_readme_example.py`が実際の出力docxから描いています。
 
 ```jsonl
 {"old_text":"検出率のが高く","new_text":"検出率が高く"}
 {"old_text":"画像上で残存がなく画像上Complete Response","new_text":"画像上残存がなくcomplete response"}
 ```
 
-英語版は[README_en.md](README_en.md)にあります。
+## 目次
 
 - [できること](#できること)
 - [できないこと](#できないこと)
