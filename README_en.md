@@ -1,10 +1,20 @@
 # docx-redline-ja
 
-[日本語](README.md)
+Japanese version: [README.md](README.md)
 
-Write AI proofreading results into a Word manuscript as tracked changes. Even in
-Japanese, the tracked change covers only the characters that actually changed.
-The tool runs as a Claude Code plugin or as a standalone Python script.
+A skill that writes proofreading results for Japanese text into a Word document
+(.docx) as tracked changes.
+
+Tools built for languages that put spaces between words, like English, treat a
+run of Japanese text up to the next punctuation mark as a single word. Fixing
+one character then deletes and reinserts that whole run, and it is hard to see
+what was actually changed.
+
+This skill diffs character by character, so a tracked change covers only the
+characters that changed. There is less to compare between the before and after
+text, and reviewing and accepting the corrections goes faster.
+
+## Example
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/example-en-dark.png">
@@ -13,14 +23,14 @@ The tool runs as a Claude Code plugin or as a standalone Python script.
 
 The same two findings applied with docx-cli 0.28.0 (`replace --batch`) and
 with this skill. docx-cli deletes each matched phrase and reinserts the
-rewritten one; this skill marks only the characters that changed. The sentence
-is made up for the example, and `tools/render_readme_example.py` draws the
-figure from the actual output files.
+rewritten one; this skill marks only the characters that changed.
 
 ```jsonl
 {"old_text":"検出率のが高く","new_text":"検出率が高く"}
 {"old_text":"画像上で残存がなく画像上Complete Response","new_text":"画像上残存がなくcomplete response"}
 ```
+
+## Contents
 
 - [What it's for](#what-its-for)
 - [Minimal redlines, even in Japanese](#minimal-redlines-even-in-japanese)
