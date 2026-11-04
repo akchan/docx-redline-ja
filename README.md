@@ -1,72 +1,44 @@
-# docx-review-tools
+# 　docx-review-tools
 
-[日本語](README_ja.md)
+[English](README_en.md)
 
-Write AI proofreading results into a Word manuscript as tracked changes and
-comments. The tools run as Claude Code plugins or as standalone Python scripts.
+AIが出した校正の指摘を、Wordの変更履歴とコメントとして原稿の`.docx`に書き込むツールです。Claude Codeのプラグインとして使えるほか、Pythonのスクリプト単体でも動きます。
 
-## What it's for
+## 何に役立つか
 
-When you ask Claude to proofread a manuscript, the suggestions usually come back
-as chat text. Applying them means opening Word, finding each passage, and fixing
-it by hand. With dozens of suggestions that takes a while, and afterward nobody
-can tell what was changed.
+Claudeに原稿を校正させると、指摘はふつうチャットの文章として返ってきます。これを原稿に反映するには、Wordを開いて該当箇所を1件ずつ探して直すことになり、件数が多いとかなりの手間です。どこを直したのかも後から分からなくなります。
 
-These tools put the suggestions into the document as native Word tracked changes
-and comments. You then work through them in Word's normal review pane, accepting
-or rejecting each change and reading each comment, or pass the file straight to
-a co-author or editor.
+このツールを使うと、指摘がWordの変更履歴とコメントとして原稿に入ります。あとはいつもの校閲画面で変更を1件ずつ承諾または却下し、コメントを読めば済みます。そのまま共著者や編集者に渡すこともできます。
 
-The tools do not proofread anything themselves. They only write findings into
-the document. The findings come from Claude or from a separate proofreading or
-peer-review skill.
+このツール自体は校正をしません。担当するのは、指摘を原稿に書き込むところだけです。指摘を出すのはClaudeや、校正・査読のための別のスキルです。
 
-## Two plugins
+## 2つのプラグイン
 
-Each plugin installs on its own.
+プラグインは2つあり、片方だけでも使えます。
 
-- `docx-apply-redline` takes before/after pairs (`old_text` and `new_text`) and
-  writes them as tracked changes.
-- `docx-add-comment` attaches a comment to a given passage (`anchor_text`)
-  without changing a single character of the body. Use it for points the author
-  has to decide on, such as "State which statistical test was used."
+- `docx-apply-redline`は、直す前と直した後の文字列の組（`old_text`と`new_text`）を、変更履歴として書き込みます。
+- `docx-add-comment`は、指定した文字列（`anchor_text`）にコメントを付けます。本文は1文字も変えません。「検定手法を明記してください」のように、直すかどうかを著者が判断すべき指摘に向いています。
 
-You can set the author name on revisions and comments. It defaults to `AI校正`
-("AI proofreading"), so the changes are easy to tell apart from a human's.
+変更履歴とコメントの著者名は指定できます。既定は「AI校正」なので、人が入れた変更と見分けられます。
 
-## Minimal redlines, even in Japanese
+## 日本語でも、変えた文字だけに変更履歴が付く
 
-Given `{"old_text":"所見がみられか？","new_text":"所見がみられるか？"}`, the
-tracked change covers only the one inserted character, `る`.
+`{"old_text":"所見がみられか？","new_text":"所見がみられるか？"}`という指摘なら、変更履歴が付くのは挿入した「る」の1文字だけです。
 
-That sounds obvious, but word-level diff tools don't manage it for languages
-written without spaces. A Japanese paragraph has no spaces, so it is treated as
-one word, and changing a single character deletes and reinserts the whole
-paragraph. This tool diffs character by character, so the redline stays as small
-as the edit.
+当たり前に見えますが、単語単位で差分をとるツールではこうなりません。日本語の文には単語の間のスペースがないので、段落全体が1単語として扱われます。1文字直しただけで段落ごと削除と挿入になり、どこを直したのか読み取れなくなるのです。このツールは1文字単位で差分をとるので、変更履歴は必要な最小限に収まります。
 
-`benchmarks/` applies the same 20 edits with each tool and counts the characters
-marked up. In Japanese this tool marks up 45, which is the theoretical minimum.
-[docx-cli](https://github.com/kklimuk/docx-cli) marks up 1,265 with
-`replace --batch` and 12,975 with `edit --batch`. In English the figures are 140
-for this tool and 1,430 and 312 for docx-cli.
+`benchmarks/`で、同じ20件の修正を各ツールで入れ、変更履歴が付いた文字数を比べました。日本語では、このツールが45文字で、これは理論上の最小値と同じです。同じ修正で、[docx-cli](https://github.com/kklimuk/docx-cli)の`replace --batch`は1,265文字、`edit --batch`は12,975文字に変更履歴が付きました。
 
-Anthropic's `docx` skill has no command for tracked changes, so Claude writes
-the revision XML by hand. The results are reasonable, but it costs much more
-time and many more tokens.
+Anthropicの`docx`スキルには変更履歴を入れるコマンドがなく、Claudeが変更履歴のXMLを直接書きます。結果は悪くありませんが、そのぶん時間とトークンを多く使います。
 
-## Safety
+## 安全のための決まりごと
 
-- The input file is never modified. Output always goes to a separate file.
-- Everything runs locally, and no document content is sent to any service. That
-  makes the tools usable on unpublished or confidential manuscripts.
-- If a passage occurs more than once, the tool cannot know which one is meant,
-  so by default it skips that finding and reports why.
-- Before writing the output, the tools check that the package is valid OOXML.
-  For tracked changes they also check that rejecting every change restores the
-  original text. If a check fails, no file is written.
+- 元のファイルは書き換えず、別のファイルに書き出します。
+- 処理はすべて手元のマシンで行い、文書の内容を外部のサービスに送りません。未発表の論文のように、外に出せない原稿にも使えます。
+- 指定した文字列が原稿の中に複数あるときは、どれを直すべきか決められないので、既定では書き込まずにスキップします。スキップした指摘は理由とともに報告します。
+- 書き出す前に、ファイルがOOXMLとして正しいかを確かめます。変更履歴の場合は、すべて却下すると元の文章に戻るかも確かめます。確かめられなければファイルを書き出しません。
 
-## Use in Claude Code
+## Claude Codeで使う
 
 ```text
 /plugin marketplace add akchan/docx-review-tools
@@ -74,17 +46,15 @@ time and many more tokens.
 /plugin install docx-add-comment@docx-review-tools
 ```
 
-Install only the plugin you need. Python 3.11 or later and the packages in
-`requirements.txt` are required.
+必要なプラグインだけをインストールすれば十分です。動かすにはPython 3.11以降と、`requirements.txt`に書いてあるパッケージが必要です。
 
-Then ask Claude something like:
+インストールしたら、たとえば次のように頼みます。
 
 ```text
-Proofread manuscript.docx, collect the findings in findings.jsonl, and apply
-them with docx-apply-redline as tracked changes.
+manuscript.docxを校正して、指摘をfindings.jsonlにまとめてから、docx-apply-redlineで変更履歴として入れて
 ```
 
-## Use without Claude Code
+## Claude Codeなしで使う
 
 ```bash
 python3 plugins/docx-apply-redline/skills/docx-apply-redline/scripts/apply_redline.py \
@@ -94,8 +64,7 @@ python3 plugins/docx-add-comment/skills/docx-add-comment/scripts/apply_comment.p
   --docx manuscript.docx --comments comments.jsonl --out commented.docx
 ```
 
-The input is JSONL, one finding per line. The first example is a tracked change
-and the second a comment:
+入力するJSONLは、1行に1件の指摘を書きます。上が変更履歴、下がコメントの例です。
 
 ```jsonl
 {"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
@@ -105,10 +74,9 @@ and the second a comment:
 {"anchor_text":"主要評価項目","comment":"評価時点を明記してください。"}
 ```
 
-See each plugin's `SKILL.md` and `references/` directory for the complete input
-contract, location syntax, verification fields, and skip reasons.
+入力の仕様、位置の指定方法、検証結果の項目、スキップされる理由の一覧は、各プラグインの`SKILL.md`と`references/`ディレクトリに書いてあります。
 
-## Development
+## 開発
 
 ```bash
 python3 -m pip install -r requirements-dev.txt
@@ -116,12 +84,8 @@ python3 -m pytest -q
 claude plugin validate .
 ```
 
-Japanese and English test DOCX files are generated during each test run from
-short excerpts of Natsume Soseki's *I Am a Cat* and Lewis Carroll's *Alice's
-Adventures in Wonderland*, both in the public domain. No private manuscripts or
-pre-generated document fixtures are stored in this repository. See
-`TEST_DATA.md` for sources.
+テストに使う日本語と英語のDOCXファイルは、テストを実行するたびに生成します。本文は夏目漱石『吾輩は猫である』とLewis Carroll『不思議の国のアリス』の短い抜粋で、どちらもパブリックドメインです。非公開の原稿や、生成済みの文書ファイルはリポジトリに置いていません。出典は`TEST_DATA.md`にあります。
 
-## License
+## ライセンス
 
-MIT. See `THIRD_PARTY_NOTICES.md` for bundled OOXML schemas and supporting code.
+MITです。同梱しているOOXMLスキーマと補助コードについては`THIRD_PARTY_NOTICES.md`を見てください。
