@@ -24,6 +24,7 @@ figure from the actual output files.
 
 - [What it's for](#what-its-for)
 - [Minimal redlines, even in Japanese](#minimal-redlines-even-in-japanese)
+- [Cost and tokens](#cost-and-tokens)
 - [Safety](#safety)
 - [Use in Claude Code](#use-in-claude-code)
 - [Use in Codex](#use-in-codex)
@@ -71,12 +72,43 @@ marked up. In Japanese this tool marks up 45, which is the theoretical minimum.
 for this tool and 1,430 and 312 for docx-cli.
 
 Anthropic's `docx` skill has no command for tracked changes, so Claude writes
-the revision XML by hand. The results are reasonable, but it costs much more
-time and many more tokens.
+the revision XML by hand. The results are reasonable, but it costs more; see
+[Cost and tokens](#cost-and-tokens).
 
 There is no comment feature. To add Word comments for points the author has to
 decide on, use [Adeu](https://github.com/dealfluence/adeu) or the comment
 support in the `docx` skill.
+
+## Cost and tokens
+
+Claude Code was given a manuscript and 20 edit instructions and asked to produce
+the redlined .docx, once with each tool available and nothing else. Model:
+Sonnet 5.5 (`claude-sonnet-5-5`); a 40-paragraph document; means of 3 runs.
+
+| Language | Tool | Cost (USD) | Input tokens | Output tokens | Marked-up chars (x minimum) |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Japanese | This skill | 0.060 | 51,933 | 644 | 1.0x |
+| Japanese | None (model alone) | 0.068 | 70,370 | 1,653 | 1.0x |
+| Japanese | `docx` skill | 0.079 | 74,055 | 1,589 | 1.0x |
+| Japanese | docx-cli | 0.080 | 92,508 | 1,028 | 28.1x |
+| English | This skill | 0.060 | 56,726 | 764 | 1.0x |
+| English | None (model alone) | 0.096 | 86,113 | 2,295 | 1.1x |
+| English | `docx` skill | 0.075 | 71,110 | 1,678 | 1.1x |
+| English | docx-cli | 0.065 | 70,186 | 709 | 10.2x |
+
+In both languages this skill used the least money, input tokens and output
+tokens of the four. Against the model alone it cost 12% less in Japanese and
+37% less in English, with 26% and 34% fewer input tokens and 61% and 67% fewer
+output tokens. The model only writes one JSONL line per edit and never reads or
+writes the document's XML.
+
+On redline size, Sonnet 5.5 alone also reached the minimum in Japanese; the gap
+to a word-level diff such as docx-cli (28x in Japanese) remains. Input tokens
+include cache reads and writes; cost is what Claude Code reports. To reproduce:
+
+```bash
+python3 benchmarks/run_agentic.py --model claude-sonnet-5-5 --lang both --runs 3 --tasks 20 --paragraphs 40 --max-turns 80
+```
 
 ## Safety
 

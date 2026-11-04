@@ -90,10 +90,15 @@ class Run:
     reversible: bool
     revision_chars: int | None
     minimum_revision_chars: int
+    #: The minimum markup for the edits that were applied correctly.  The
+    #: ratio divides by this, not by the minimum for every edit requested, or
+    #: an arm that applied fewer edits would look tighter than it is.
+    landed_minimum_chars: int
     opens_as_package: bool
     input_tokens: int
     output_tokens: int
     cache_read_tokens: int
+    cache_creation_tokens: int
     turns: int
     seconds: float
     cost_usd: float | None
@@ -165,12 +170,16 @@ def absolute_rule(tool: str, directory: Path) -> str:
     return f"{tool}(/{directory.resolve()}/**)"
 
 
+ARMS = ("ours", "docx-cli", "docx-skill", "no-skill")
+
+
 def tool_directories(arm: str) -> list[Path]:
     """Where an arm's tool lives: readable, never writable."""
     return {
         "ours": [OURS_PLUGIN],
         "docx-cli": [DOCX_CLI_PLUGIN],
         "docx-skill": [DOCX_SKILL] if DOCX_SKILL else [],
+        "no-skill": [],
     }[arm]
 
 
@@ -288,6 +297,8 @@ def claude_command(arm: str, model: str, workdir: Path, max_turns: int) -> tuple
     elif arm == "docx-skill":
         plugin = docx_skill_as_plugin(workdir)
         command += ["--plugin-dir", str(plugin), "--add-dir", str(DOCX_SKILL.resolve())]
+    elif arm == "no-skill":
+        pass  # the model alone: file tools and a sandboxed shell, no skill
     else:
         raise ValueError(arm)
     return command, environment
@@ -342,6 +353,7 @@ def run_once(arm: str, language: str, attempt: int, model: str, root: Path,
         detail = (completed.stderr or completed.stdout).strip()[:300]
 
     correct = 0
+    landed_minimum = 0
     reversible = False
     revision_chars = None
     opens = False
@@ -350,12 +362,14 @@ def run_once(arm: str, language: str, attempt: int, model: str, root: Path,
         found = measure.measure(output)
         revision_chars = found.revision_chars
         reversible = found.rejected_text == paragraphs
-        correct = sum(
-            1
+        landed = [
+            task
             for task in selected
             if task.paragraph < len(found.accepted_text)
             and found.accepted_text[task.paragraph] == expected[task.paragraph]
-        )
+        ]
+        correct = len(landed)
+        landed_minimum = sum(task.expected_deleted + task.expected_inserted for task in landed)
     elif not detail:
         detail = "no readable .docx was produced"
 
@@ -364,12 +378,23 @@ def run_once(arm: str, language: str, attempt: int, model: str, root: Path,
         ok=opens and correct == len(selected) and reversible,
         tasks_correct=correct, tasks_total=len(selected), reversible=reversible,
         revision_chars=revision_chars, minimum_revision_chars=minimum,
+        landed_minimum_chars=landed_minimum,
         opens_as_package=opens,
         input_tokens=int(usage.get("input_tokens", 0)),
         output_tokens=int(usage.get("output_tokens", 0)),
         cache_read_tokens=int(usage.get("cache_read_input_tokens", 0)),
+        cache_creation_tokens=int(usage.get("cache_creation_input_tokens", 0)),
         turns=turns, seconds=round(elapsed, 1), cost_usd=cost, detail=detail,
     )
+
+
+def _mean_ratio(runs: list[Run]) -> float | None:
+    ratios = [
+        run.revision_chars / run.landed_minimum_chars
+        for run in runs
+        if run.revision_chars is not None and run.landed_minimum_chars
+    ]
+    return statistics.mean(ratios) if ratios else None
 
 
 def summarise(runs: list[Run]) -> ArmSummary:
@@ -383,8 +408,10 @@ def summarise(runs: list[Run]) -> ArmSummary:
         attempts=len(runs),
         solved=statistics.mean(run.tasks_correct for run in runs),
         revision_chars=chars,
-        noise_ratio=(chars / first.minimum_revision_chars) if chars else None,
-        input_tokens=statistics.mean(run.input_tokens + run.cache_read_tokens for run in runs),
+        noise_ratio=_mean_ratio(runs),
+        input_tokens=statistics.mean(
+            run.input_tokens + run.cache_read_tokens + run.cache_creation_tokens for run in runs
+        ),
         output_tokens=statistics.mean(run.output_tokens for run in runs),
         seconds=statistics.mean(run.seconds for run in runs),
         cost_usd=statistics.mean(costs) if costs else None,
@@ -416,7 +443,7 @@ def main() -> int:
     parser.add_argument("--model", default="claude-haiku-4-5-20251001")
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--lang", choices=("ja", "en", "both"), default="both")
-    parser.add_argument("--arm", action="append", choices=("ours", "docx-cli", "docx-skill"), default=None)
+    parser.add_argument("--arm", action="append", choices=ARMS, default=None)
     parser.add_argument("--tasks", type=int, default=5, help="edits per document (kept small: each run pays for them)")
     parser.add_argument("--max-turns", type=int, default=40)
     parser.add_argument("--paragraphs", type=int, default=20)
@@ -426,7 +453,7 @@ def main() -> int:
     # must be absolute or it resolves against the wrong directory.
     args.out_dir = args.out_dir.resolve()
 
-    selected_arms = args.arm or ["ours", "docx-cli", "docx-skill"]
+    selected_arms = args.arm or list(ARMS)
     if "docx-skill" in selected_arms and DOCX_SKILL is None:
         if args.arm:
             parser.error("docx skill not found; install it or set DOCX_SKILL_DIR")
