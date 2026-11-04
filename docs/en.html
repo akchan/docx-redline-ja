@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docx-redline-ja: AI proofreading as Word tracked changes, down to the character in Japanese</title>
+<meta name="description" content="Open-source skill that writes AI proofreading results for Japanese text into a Word document (.docx) as native tracked changes. It diffs character by character, so each tracked change covers only the characters that changed. Works with Claude Code, Codex and Claude Desktop.">
+<link rel="canonical" href="https://akchan.github.io/docx-redline-ja/en.html">
+<link rel="alternate" hreflang="ja" href="https://akchan.github.io/docx-redline-ja/">
+<link rel="alternate" hreflang="en" href="https://akchan.github.io/docx-redline-ja/en.html">
+<link rel="alternate" hreflang="x-default" href="https://akchan.github.io/docx-redline-ja/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="docx-redline-ja">
+<meta property="og:title" content="docx-redline-ja: AI proofreading as Word tracked changes">
+<meta property="og:description" content="Minimal Word tracked changes for Japanese text, from old/new text pairs. Works with Claude Code, Codex and Claude Desktop.">
+<meta property="og:url" content="https://akchan.github.io/docx-redline-ja/en.html">
+<meta property="og:image" content="https://akchan.github.io/docx-redline-ja/example-en-light.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "docx-redline-ja",
+  "description": "Writes AI proofreading results for Japanese text into a Word document (.docx) as native tracked changes, diffing character by character.",
+  "codeRepository": "https://github.com/akchan/docx-redline-ja",
+  "programmingLanguage": "Python",
+  "license": "https://opensource.org/licenses/MIT",
+  "author": {"@type": "Person", "name": "akchan", "url": "https://github.com/akchan"},
+  "inLanguage": "en",
+  "keywords": "Word, tracked changes, redline, proofreading, AI, Claude, Claude Code, Codex, docx, Japanese"
+}
+</script>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --line: #d1d9e0;
+  --accent: #0969da; --code-bg: #f6f8fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --line: #3d444d;
+          --accent: #4493f8; --code-bg: #151b23; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  line-height: 1.65; font-size: 16px; }
+main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+header p.lang { margin: 0 0 32px; font-size: 14px; }
+h1 { font-size: 34px; line-height: 1.25; margin: 0 0 12px; }
+.lead { font-size: 19px; margin: 0 0 24px; }
+h2 { font-size: 22px; margin: 56px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+a { color: var(--accent); }
+.buttons { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 40px; }
+.buttons a { display: inline-block; padding: 8px 16px; border: 1px solid var(--line);
+  border-radius: 6px; text-decoration: none; font-weight: 600; }
+.buttons a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+figure { margin: 0; }
+figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; }
+pre { background: var(--code-bg); padding: 12px 16px; border-radius: 6px; overflow-x: auto; line-height: 1.6; }
+p code, li code, td code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+ul { padding-left: 1.4em; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.ours td { font-weight: 600; }
+footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (max-width: 520px) { h1 { font-size: 28px; } .lead { font-size: 17px; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="lang"><a href="./" hreflang="ja">日本語</a></p>
+  <h1>docx-redline-ja</h1>
+  <p class="lead">A skill that writes AI proofreading results for Japanese text into a Word document as tracked changes. It diffs character by character, so each tracked change covers only the characters that changed.</p>
+  <div class="buttons">
+    <a class="primary" href="https://github.com/akchan/docx-redline-ja">View on GitHub</a>
+    <a href="#install">Install</a>
+  </div>
+</header>
+
+<figure>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="example-en-dark.png">
+    <img src="example-en-light.png" width="720" height="286" alt="Three rows: the original sentence, docx-cli, and this skill. docx-cli strikes out whole phrases and reinserts them; this skill marks only the deleted の, で and 画像上 and the lowercased C and R.">
+  </picture>
+  <figcaption>The same two findings applied with docx-cli, which diffs by word, and with this skill. Both rows are drawn from real output.</figcaption>
+</figure>
+
+<h2>The problem with Japanese</h2>
+<p>Ask an AI such as Claude to proofread a manuscript and the suggestions come back as chat text. Applying them by hand in Word takes a while, and afterward nobody can tell what was changed.</p>
+<p>Tools that write suggestions as Word tracked changes exist, but most assume a language with spaces between words. Japanese has none, so everything up to the next punctuation mark is treated as one word, and fixing a single character deletes and reinserts all of it. The reviewer cannot see what was actually fixed.</p>
+<p>docx-redline-ja diffs character by character. Each tracked change covers only the characters that changed, so the author can check and accept or reject each correction in Word's review pane.</p>
+
+<h2>What it does</h2>
+<ul>
+  <li>Reads a JSONL file of <code>old_text</code>/<code>new_text</code> pairs and writes them into a copy of the .docx as native Word tracked changes. The original is never modified.</li>
+  <li>Before writing, checks that rejecting every change restores the original text and that other people's tracked changes are intact. If any check fails, nothing is written.</li>
+  <li>Skips a finding that matches more than one place, and says why.</li>
+  <li>Edits inside table cells and text boxes, and handles superscripts and subscripts such as reference numbers.</li>
+  <li>Needs only Python 3.11+ and <code>lxml</code>. It runs locally and sends no document content anywhere.</li>
+</ul>
+
+<h2>Benchmark: cost and tokens</h2>
+<p>Claude Code (Sonnet 5.5) was given a 40-paragraph document and 20 edit instructions and asked to produce the redlined .docx. Means of 3 runs.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Language</th><th>Tool</th><th class="num">Cost (USD)</th><th class="num">Input tokens</th><th class="num">Marked-up chars</th></tr></thead>
+  <tbody>
+    <tr class="ours"><td>Japanese</td><td>This skill</td><td class="num">0.060</td><td class="num">51,933</td><td class="num">1.0x minimum</td></tr>
+    <tr><td>Japanese</td><td>None (model alone)</td><td class="num">0.068</td><td class="num">70,370</td><td class="num">1.0x</td></tr>
+    <tr><td>Japanese</td><td>Anthropic's <code>docx</code> skill</td><td class="num">0.079</td><td class="num">74,055</td><td class="num">1.0x</td></tr>
+    <tr><td>Japanese</td><td>docx-cli</td><td class="num">0.080</td><td class="num">92,508</td><td class="num">28.1x</td></tr>
+    <tr class="ours"><td>English</td><td>This skill</td><td class="num">0.060</td><td class="num">56,726</td><td class="num">1.0x</td></tr>
+    <tr><td>English</td><td>None (model alone)</td><td class="num">0.096</td><td class="num">86,113</td><td class="num">1.1x</td></tr>
+  </tbody>
+</table>
+</div>
+<p>In both languages this skill used the least money and tokens of the four. Against the model alone it cost 12% less in Japanese and 37% less in English. The full table and method are in the <a href="https://github.com/akchan/docx-redline-ja/blob/main/README_en.md#cost-and-tokens">README</a>.</p>
+
+<h2 id="install">Install</h2>
+<h3>Claude Code</h3>
+<pre><code>/plugin marketplace add akchan/docx-redline-ja
+/plugin install docx-redline-ja@docx-redline-ja</code></pre>
+<h3>Codex CLI</h3>
+<pre><code>codex plugin marketplace add akchan/docx-redline-ja
+codex plugin add docx-redline-ja@docx-redline-ja</code></pre>
+<h3>Claude Desktop (Cowork)</h3>
+<p>Open Customize in the sidebar, then Plugins. Select Add marketplace, enter <code>akchan/docx-redline-ja</code>, and install docx-redline-ja.</p>
+
+<h2>Usage</h2>
+<p>Once installed, ask the agent something like:</p>
+<pre><code>Proofread manuscript.docx, collect the findings in findings.jsonl, and apply
+them with docx-redline-ja as tracked changes.</code></pre>
+<p>Findings are JSONL, one per line. The script also runs on its own:</p>
+<pre><code>{"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
+
+python3 plugins/docx-redline-ja/skills/docx-redline-ja/scripts/apply_redline.py \
+  --docx manuscript.docx --findings findings.jsonl --out reviewed.docx</code></pre>
+
+<h2>What it does not do</h2>
+<ul>
+  <li>It does not proofread. An agent or a person decides what to change; this skill writes those decisions into the document.</li>
+  <li>It edits body paragraphs only, not comments, headers, footers or footnotes.</li>
+  <li>Each edit must stay within one paragraph.</li>
+  <li>It does not add comments.</li>
+</ul>
+
+<footer>
+  <p>docx-redline-ja is open source under the MIT license. Source code, full documentation, tests and benchmarks are on <a href="https://github.com/akchan/docx-redline-ja">GitHub</a>.</p>
+</footer>
+</main>
+</body>
+</html>

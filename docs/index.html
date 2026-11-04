@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docx-redline-ja：AIの校正結果をWordの変更履歴に。日本語でも変えた文字だけ</title>
+<meta name="description" content="ClaudeなどのAIが出した日本語の校正結果を、Word文書（.docx）の変更履歴として書き込むオープンソースのスキル。差分を文字単位で取るので、変更履歴に残るのは実際に変わった文字だけ。Claude Code、Codex、Claude Desktopで使えます。">
+<link rel="canonical" href="https://akchan.github.io/docx-redline-ja/">
+<link rel="alternate" hreflang="ja" href="https://akchan.github.io/docx-redline-ja/">
+<link rel="alternate" hreflang="en" href="https://akchan.github.io/docx-redline-ja/en.html">
+<link rel="alternate" hreflang="x-default" href="https://akchan.github.io/docx-redline-ja/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="docx-redline-ja">
+<meta property="og:title" content="docx-redline-ja：AIの校正結果をWordの変更履歴に">
+<meta property="og:description" content="日本語の校正結果を、変わった文字だけのWord変更履歴として書き込むスキル。Claude Code、Codex、Claude Desktop対応。">
+<meta property="og:url" content="https://akchan.github.io/docx-redline-ja/">
+<meta property="og:image" content="https://akchan.github.io/docx-redline-ja/example-ja-light.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "docx-redline-ja",
+  "description": "AIが出した日本語の校正結果を、Word文書（.docx）の変更履歴として書き込むスキル。差分を文字単位で取る。",
+  "codeRepository": "https://github.com/akchan/docx-redline-ja",
+  "programmingLanguage": "Python",
+  "license": "https://opensource.org/licenses/MIT",
+  "author": {"@type": "Person", "name": "akchan", "url": "https://github.com/akchan"},
+  "inLanguage": "ja",
+  "keywords": "Word, 変更履歴, 校正, AI, Claude, Claude Code, Codex, docx, 日本語, tracked changes"
+}
+</script>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --line: #d1d9e0;
+  --accent: #0969da; --del: #cf222e; --code-bg: #f6f8fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --line: #3d444d;
+          --accent: #4493f8; --del: #f85149; --code-bg: #151b23; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", system-ui, sans-serif;
+  line-height: 1.8; font-size: 16px; }
+main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+header p.lang { margin: 0 0 32px; font-size: 14px; }
+h1 { font-size: 34px; line-height: 1.3; margin: 0 0 12px; letter-spacing: 0.01em; }
+.lead { font-size: 19px; margin: 0 0 24px; }
+h2 { font-size: 22px; margin: 56px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+a { color: var(--accent); }
+.buttons { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 40px; }
+.buttons a { display: inline-block; padding: 8px 16px; border: 1px solid var(--line);
+  border-radius: 6px; text-decoration: none; font-weight: 600; }
+.buttons a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+figure { margin: 0; }
+figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; }
+pre { background: var(--code-bg); padding: 12px 16px; border-radius: 6px; overflow-x: auto; line-height: 1.6; }
+p code, li code, td code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+ul { padding-left: 1.4em; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.ours td { font-weight: 600; }
+.note { color: var(--muted); font-size: 14px; }
+footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (max-width: 520px) { h1 { font-size: 28px; } .lead { font-size: 17px; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="lang"><a href="en.html" hreflang="en">English</a></p>
+  <h1>docx-redline-ja</h1>
+  <p class="lead">AIが出した日本語の校正結果を、Wordの変更履歴として原稿に書き込むスキルです。差分を文字単位で取るので、変更履歴に残るのは実際に変わった文字だけです。</p>
+  <div class="buttons">
+    <a class="primary" href="https://github.com/akchan/docx-redline-ja">GitHubで見る</a>
+    <a href="#install">導入する</a>
+  </div>
+</header>
+
+<figure>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="example-ja-dark.png">
+    <img src="example-ja-light.png" width="720" height="286" alt="原文、docx-cli、このスキルの3行の比較。docx-cliは句をまるごと削除して書き直しているが、このスキルは「の」「で」「画像上」の削除とCとRの小文字化だけを変更履歴にしている。">
+  </picture>
+  <figcaption>同じ2件の指摘を、単語単位で差分を取るdocx-cliとこのスキルで入れた結果。どちらも実際の出力から描いています。</figcaption>
+</figure>
+
+<h2>日本語の校正で何が困るのか</h2>
+<p>ClaudeなどのAIに原稿を校正させると、指摘はチャットの文章で返ってきます。Wordで1件ずつ探して直すのは手間で、どこを直したのかも後から分からなくなります。</p>
+<p>指摘をWordの変更履歴として入れるツールはいくつかありますが、多くは英語のように単語の間に空白がある言語を前提にしています。日本語の文は句読点までの一続きが1つの単語として扱われ、1文字直しただけでもその全体が削除と挿入になります。これでは、どこを直したのかが読み取れません。</p>
+<p>docx-redline-jaは差分を文字単位で取ります。変更履歴は変わった文字だけに付くので、Wordの校閲画面で修正を1件ずつ確かめて、承諾または却下できます。</p>
+
+<h2>できること</h2>
+<ul>
+  <li>「どの文字列を何に直すか」を1行1件で並べたJSONLを読み、原稿docxの別コピーにWordの変更履歴として書き込みます。元の原稿は書き換えません。</li>
+  <li>書き出す前に、変更履歴をすべて却下すると原文に戻るか、他の人が入れた変更履歴を壊していないかを確かめます。1つでも通らなければファイルを書き出しません。</li>
+  <li>直す箇所が原稿の中に複数あって決められない指摘は、適用せずに理由とともに返します。</li>
+  <li>表のセルとテキストボックスの中も編集できます。文献番号などの上付き・下付きも扱えます。</li>
+  <li>必要なのはPython 3.11以降と<code>lxml</code>だけです。処理は手元で行い、このツールが文書を外部に送ることはありません。</li>
+</ul>
+
+<h2>ベンチマーク：費用とトークン</h2>
+<p>Claude Code（Sonnet 5.5）に40段落の原稿と20件の修正指示を渡し、変更履歴を入れたdocxを作らせました。値は3回の平均です。</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>言語</th><th>使った道具</th><th class="num">費用（USD）</th><th class="num">入力トークン</th><th class="num">変更履歴の文字数</th></tr></thead>
+  <tbody>
+    <tr class="ours"><td>日本語</td><td>このスキル</td><td class="num">0.060</td><td class="num">51,933</td><td class="num">最小の1.0倍</td></tr>
+    <tr><td>日本語</td><td>なし（モデル単独）</td><td class="num">0.068</td><td class="num">70,370</td><td class="num">1.0倍</td></tr>
+    <tr><td>日本語</td><td>Anthropicの<code>docx</code>スキル</td><td class="num">0.079</td><td class="num">74,055</td><td class="num">1.0倍</td></tr>
+    <tr><td>日本語</td><td>docx-cli</td><td class="num">0.080</td><td class="num">92,508</td><td class="num">28.1倍</td></tr>
+    <tr class="ours"><td>英語</td><td>このスキル</td><td class="num">0.060</td><td class="num">56,726</td><td class="num">1.0倍</td></tr>
+    <tr><td>英語</td><td>なし（モデル単独）</td><td class="num">0.096</td><td class="num">86,113</td><td class="num">1.1倍</td></tr>
+  </tbody>
+</table>
+</div>
+<p>このスキルは日英とも、費用とトークンが比べた4つの中で最も少なくなりました。モデル単独と比べると、費用は日本語で12%、英語で37%少なくなっています。全体の表と方法は<a href="https://github.com/akchan/docx-redline-ja#ベンチマーク">README</a>にあります。</p>
+
+<h2 id="install">導入</h2>
+<h3>Claude Code</h3>
+<pre><code>/plugin marketplace add akchan/docx-redline-ja
+/plugin install docx-redline-ja@docx-redline-ja</code></pre>
+<h3>Codex CLI</h3>
+<pre><code>codex plugin marketplace add akchan/docx-redline-ja
+codex plugin add docx-redline-ja@docx-redline-ja</code></pre>
+<h3>Claude Desktop（Cowork）</h3>
+<p>サイドバーの「Customize」から「Plugins」を開き、「Add marketplace」で<code>akchan/docx-redline-ja</code>を追加して、docx-redline-jaを「Install」します。</p>
+
+<h2>使い方</h2>
+<p>導入したら、エージェントにこう頼みます。</p>
+<pre><code>manuscript.docxを校正して、指摘をfindings.jsonlにまとめてから、docx-redline-jaで変更履歴として入れて</code></pre>
+<p>指摘は1行に1件のJSONLです。スクリプトを直接動かすこともできます。</p>
+<pre><code>{"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
+
+python3 plugins/docx-redline-ja/skills/docx-redline-ja/scripts/apply_redline.py \
+  --docx manuscript.docx --findings findings.jsonl --out reviewed.docx</code></pre>
+
+<h2>できないこと</h2>
+<ul>
+  <li>校正そのものはしません。何を直すかを決めるのはエージェントか人で、このスキルはその結果を書き込むだけです。</li>
+  <li>編集するのは本文の段落だけで、コメント、ヘッダー・フッター、脚注は対象外です。</li>
+  <li>1つの修正は1段落の中に収まるものだけを扱います。</li>
+  <li>コメントを付ける機能はありません。</li>
+</ul>
+
+<footer>
+  <p>docx-redline-ja はMITライセンスのオープンソースです。ソースコード、詳しい使い方、テストとベンチマークは<a href="https://github.com/akchan/docx-redline-ja">GitHub</a>にあります。</p>
+</footer>
+</main>
+</body>
+</html>

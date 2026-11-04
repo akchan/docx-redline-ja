@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akchan.github.io/docx-redline-ja/sitemap.xml
