@@ -6,6 +6,32 @@ Write AI proofreading results into a Word manuscript as tracked changes. Even in
 Japanese, the tracked change covers only the characters that actually changed.
 The tool runs as a Claude Code plugin or as a standalone Python script.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/example-en-dark.png">
+  <img alt="Three rows: the original sentence, docx-cli, and this skill. docx-cli strikes out the phrases 検出率のが高く and 画像上で残存がなく画像上Complete Response whole and reinserts the rewritten phrases; this skill marks only the deleted の, で and 画像上 and the lowercased C and R." src="docs/example-en-light.png" width="720">
+</picture>
+
+The same two findings applied with docx-cli 0.28.0 (`replace --batch`) and
+with this skill. docx-cli deletes each matched phrase and reinserts the
+rewritten one; this skill marks only the characters that changed. The sentence
+is made up for the example, and `tools/render_readme_example.py` draws the
+figure from the actual output files.
+
+```jsonl
+{"old_text":"検出率のが高く","new_text":"検出率が高く"}
+{"old_text":"画像上で残存がなく画像上Complete Response","new_text":"画像上残存がなくcomplete response"}
+```
+
+- [What it's for](#what-its-for)
+- [Minimal redlines, even in Japanese](#minimal-redlines-even-in-japanese)
+- [Safety](#safety)
+- [Use in Claude Code](#use-in-claude-code)
+- [Use in Codex](#use-in-codex)
+- [Use in Claude Desktop (Cowork)](#use-in-claude-desktop-cowork)
+- [Run the script directly](#run-the-script-directly)
+- [Development](#development)
+- [License](#license)
+
 ## What it's for
 
 When you ask Claude to proofread a manuscript, the suggestions usually come back
@@ -92,17 +118,18 @@ codex plugin marketplace add akchan/docx-redline-ja
 codex plugin add docx-redline-ja@docx-redline-ja
 ```
 
-The requirements and the way to ask are the same as in Claude Code.
+Then open `/skills` in Codex, or mention `$docx-redline-ja`, to use the skill.
+To install the skill alone, without the plugin, copy
+`plugins/docx-redline-ja/skills/docx-redline-ja/` into `~/.agents/skills/`.
 
 ## Use in Claude Desktop (Cowork)
 
-Add the GitHub repository as a marketplace.
-
-1. In Customize → Plugins, click + and choose Add marketplace.
-2. Enter `akchan/docx-redline-ja`.
+1. Open Customize in the sidebar, then Plugins.
+2. Select Add marketplace and enter `akchan/docx-redline-ja`.
 3. Install docx-redline-ja from the list.
 
-You ask for it the same way as in Claude Code.
+An installed plugin is saved to your account, so it also works in regular chat
+and in Claude Code. You ask for it the same way as in Claude Code.
 
 ## Run the script directly
 
@@ -136,6 +163,12 @@ Word, with their personal metadata removed, live in `tests/fixtures/`. The text
 comes from short excerpts of Natsume Soseki's *I Am a Cat* and Lewis Carroll's *Alice's
 Adventures in Wonderland*, both in the public domain. See `TEST_DATA.md` for
 sources.
+
+The figure at the top is regenerated with `python3 tools/render_readme_example.py`.
+It builds a one-paragraph DOCX from the example sentence, applies the same
+findings with this skill and with docx-cli (`bunx bun-docx@0.28.0`), and draws
+the `w:del`/`w:ins` markup it reads back from both outputs. It needs Pillow,
+`bunx` and a Japanese font.
 
 ## License
 

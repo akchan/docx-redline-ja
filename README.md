@@ -1,62 +1,106 @@
 # docx-redline-ja
 
-Word文書（.docx）に、校正の結果をWordの変更履歴として書き込むスキル。
-Claude Codeのプラグインとして配布している。
+Word文書（.docx）に、校正の結果をWordの変更履歴として書き込むスキルです。
+Claude Codeのプラグインとして配布しています。
 
-入力は「どの文字列を」「何に直すか」を1行1件で並べたJSONL（以下、findings）で、出力は変更履歴の入った別のdocxである。
-差分は文字単位で取るので、変更履歴に残るのは実際に変わった文字だけになる。
-これは日本語の文書で効く。
-単語の境界を空白で見つける方式では、1文字直すだけで文節や文がまるごと削除と挿入になるのである。
+入力は「どの文字列を」「何に直すか」を1行1件で並べたJSONL（以下、findings）で、出力は変更履歴の入った別のdocxです。
+差分は文字単位で取るので、変更履歴に残るのは実際に変わった文字だけになります。
+これは日本語の文書で効きます。
+単語の境界を空白で見つける方式では、1文字直すだけで文節や文がまるごと削除と挿入になるのです。
 
-英語版は[README_en.md](README_en.md)にある。
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/example-ja-dark.png">
+  <img alt="原文、docx-cli、このスキルの3行の比較。docx-cliは「検出率のが高く」と「画像上で残存がなく画像上Complete Response」を句ごと削除して書き直しているが、このスキルは「の」「で」「画像上」の削除とCとRの小文字化だけを変更履歴にしている。" src="docs/example-ja-light.png" width="720">
+</picture>
+
+同じ2件のfindingsを、docx-cli 0.28.0（`replace --batch`）とこのスキルで入れた結果です。
+docx-cliは一致した句をまるごと削除して書き直しますが、このスキルは変わった文字だけを変更履歴に残します。
+例文は創作で、図は`tools/render_readme_example.py`が実際の出力docxから描いています。
+
+```jsonl
+{"old_text":"検出率のが高く","new_text":"検出率が高く"}
+{"old_text":"画像上で残存がなく画像上Complete Response","new_text":"画像上残存がなくcomplete response"}
+```
+
+英語版は[README_en.md](README_en.md)にあります。
+
+- [できること](#できること)
+- [できないこと](#できないこと)
+- [導入](#導入)
+- [使い方](#使い方)
+  - [findingsを書く](#findingsを書く)
+  - [適用する](#適用する)
+  - [結果を読む](#結果を読む)
+  - [位置を調べる](#位置を調べる)
+- [開発者向け](#開発者向け)
+- [ライセンス](#ライセンス)
 
 ## できること
 
-- findingsの`old_text`/`new_text`の組を、原稿docxの別コピーにWordの変更履歴（`w:ins`/`w:del`）として書き込む。原稿とfindingsは書き換えない。
-- 差分を文字単位で最小化する。
-- 変更履歴の著者名と日時を指定できる。日時を固定すれば、同じ入力から同じバイト列の出力が得られる。
-- 上付き・下付きを`<sup>`/`<sub>`/`<plain>`で指定できる。文献番号や単位（mm<sup>3</sup>など）の修正に使う。
-- 用語の統一のように一致した全箇所を直す指摘（`replace_all`）と、本文と文献一覧で方針が違う指摘（`scope`で段落範囲を限る）を扱える。
-- 原稿に他人の変更履歴が入っていても、それを壊さず重ねて書く。
-- 出力を書く前に、変更履歴をすべて却下すると原稿に戻ること（`reversible`）、他人の変更履歴が変わっていないこと（`other_revisions_preserved`）など5項目を検証し、1つでも落ちればdocxを書かない。
-- 原稿を書き換えずに、語の位置を調べる`locate`と、段落の本文を読む`read`が付いている。
-- 依存はPython 3.11以降と`lxml`だけで、スキルのディレクトリをどこに置いても動く。
+- findingsの`old_text`/`new_text`の組を、原稿docxの別コピーにWordの変更履歴（`w:ins`/`w:del`）として書き込みます。原稿とfindingsは書き換えません。
+- 差分を文字単位で最小化します。
+- 変更履歴の著者名と日時を指定できます。日時を固定すれば、同じ入力から同じバイト列の出力が得られます。
+- 上付き・下付きを`<sup>`/`<sub>`/`<plain>`で指定できます。文献番号や単位（mm<sup>3</sup>など）の修正に使います。
+- 用語の統一のように一致した全箇所を直す指摘（`replace_all`）と、本文と文献一覧で方針が違う指摘（`scope`で段落範囲を限る）を扱えます。
+- 原稿に他人の変更履歴が入っていても、それを壊さず重ねて書きます。
+- 出力を書く前に、変更履歴をすべて却下すると原稿に戻ること（`reversible`）、他人の変更履歴が変わっていないこと（`other_revisions_preserved`）など5項目を検証し、1つでも落ちればdocxを書きません。
+- 原稿を書き換えずに、語の位置を調べる`locate`と、段落の本文を読む`read`が付いています。
+- 依存はPython 3.11以降と`lxml`だけで、スキルのディレクトリをどこに置いても動きます。
 
 ## できないこと
 
-- 校正そのものはしない。何をどう直すかを決めるのは、Claude Codeなどのエージェントか人の仕事で、このスキルはその結果をdocxに反映するだけである。
-- 編集するのは本文（`word/document.xml`）の段落だけで、表のセルとテキストボックスの中は含む。コメント、ヘッダー・フッター、脚注は対象外。
-- `old_text`は1段落内に収まるものだけを扱う。段落をまたぐ修正や、段落の結合や分割はできない。
-- 書式のうち扱うのは上付き・下付きだけで、太字やフォントの変更は書けない。
-- 一致範囲がタブ、画像、フィールド、脚注番号などに掛かる修正は適用しない（`spans_inline_object`としてskipする）。
-- 指摘どうしの編集範囲が重なると、どちらも適用せずに`conflict`として返す。どちらかを優先することはしない。
+- 校正そのものはしません。何をどう直すかを決めるのは、Claude Codeなどのエージェントか人の仕事で、このスキルはその結果をdocxに反映するだけです。
+- 編集するのは本文（`word/document.xml`）の段落だけで、表のセルとテキストボックスの中は含みます。コメント、ヘッダー・フッター、脚注は対象外です。
+- `old_text`は1段落内に収まるものだけを扱います。段落をまたぐ修正や、段落の結合や分割はできません。
+- 書式のうち扱うのは上付き・下付きだけで、太字やフォントの変更は書けません。
+- 一致範囲がタブ、画像、フィールド、脚注番号などに掛かる修正は適用しません（`spans_inline_object`としてskipします）。
+- 指摘どうしの編集範囲が重なると、どちらも適用せずに`conflict`として返します。どちらかを優先することはしません。
 
 ## 導入
 
 ### Claude Code
 
-このリポジトリはClaude Codeのマーケットプレイスの形になっている（`.claude-plugin/marketplace.json`）。
-マーケットプレイス名とプラグイン名はどちらも`docx-redline-ja`である。
+このリポジトリはClaude Codeのマーケットプレイスの形になっています（`.claude-plugin/marketplace.json`）。
+マーケットプレイス名とプラグイン名はどちらも`docx-redline-ja`です。
 
 ```
 /plugin marketplace add akchan/docx-redline-ja
 /plugin install docx-redline-ja@docx-redline-ja
 ```
 
-インストールせずに試すなら、cloneしたディレクトリを`--plugin-dir`で渡す。
+インストールせずに試すなら、cloneしたディレクトリを`--plugin-dir`で渡します。
 
 ```bash
 claude --plugin-dir /path/to/docx-redline-ja/plugins/docx-redline-ja
 ```
 
+### Codex
+
+Codex CLIは、このリポジトリをそのままマーケットプレイスとして読み込めます。
+
+```sh
+codex plugin marketplace add akchan/docx-redline-ja
+codex plugin add docx-redline-ja@docx-redline-ja
+```
+
+入れたあとは、Codexの中で`/skills`を開くか、`$docx-redline-ja`と書いてスキルを呼び出せます。
+プラグインを使わずにスキルだけを置く場合は、`plugins/docx-redline-ja/skills/docx-redline-ja/`を`~/.agents/skills/`の下にコピーします。
+
+### Claude Desktop（Cowork）
+
+1. サイドバーの「Customize」から「Plugins」を開きます。
+2. 「Add marketplace」を選び、`akchan/docx-redline-ja`を入力します。
+3. 一覧に出てくるdocx-redline-jaを「Install」します。
+
+入れたプラグインはアカウントに保存されるので、Coworkのほか、通常のチャットとClaude Codeでも使えます。
+
 ### そのほかのエージェント
 
-スキルの実体は`plugins/docx-redline-ja/skills/docx-redline-ja/`の1ディレクトリで、`SKILL.md`、`references/`、`scripts/`からなる。
-Codex、Claude Desktop（Cowork）など、`SKILL.md`形式のスキルを読めるエージェントなら、このディレクトリをそのスキル置き場にコピーすれば使える。
-絶対パスや環境変数への依存が無いことはテスト（`tests/test_decoupling.py`）で確かめている。
-各エージェントでのスキル置き場の指定方法は、それぞれのドキュメントを見てほしい。
+スキルの実体は`plugins/docx-redline-ja/skills/docx-redline-ja/`の1ディレクトリで、`SKILL.md`、`references/`、`scripts/`からなります。
+`SKILL.md`形式のスキルを読めるエージェントなら、このディレクトリをそのスキル置き場にコピーすれば使えます。
+絶対パスや環境変数への依存が無いことはテスト（`tests/test_decoupling.py`）で確かめています。
 
-Pythonから直接使うこともできる。
+Pythonから直接使うこともできます。
 
 ```bash
 pip install -r requirements.txt   # lxml>=5.0
@@ -64,14 +108,14 @@ pip install -r requirements.txt   # lxml>=5.0
 
 ## 使い方
 
-Claude Codeからは、原稿docxとfindingsを渡して「変更履歴として反映して」と頼めばスキルが呼ばれる。
-以下は、スキルの中で何が起きているかと、手で実行するときの手順である。
-`<skill_dir>`は`SKILL.md`があるディレクトリを指す。
+Claude Codeからは、原稿docxとfindingsを渡して「変更履歴として反映して」と頼めばスキルが呼ばれます。
+以下は、スキルの中で何が起きているかと、手で実行するときの手順です。
+`<skill_dir>`は`SKILL.md`があるディレクトリを指します。
 
 ### findingsを書く
 
-UTF-8のJSON Linesで、1行に1件の指摘を書く。
-空行と`#`で始まる行は無視する。
+UTF-8のJSON Linesで、1行に1件の指摘を書きます。
+空行と`#`で始まる行は無視します。
 
 ```jsonl
 {"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
@@ -81,14 +125,14 @@ UTF-8のJSON Linesで、1行に1件の指摘を書く。
 {"old_text":"、","new_text":"，","replace_all":true,"scope":"p0-119"}
 ```
 
-- `old_text`：必須。原稿の変更履歴をすべて承諾した状態の本文と照合する。1段落内に収まり、（`scope`の範囲内で）一意であること。
-- `new_text`：必須。置換後の文字列。空文字列なら削除になる。`<sup>`、`<sub>`、`<plain>`だけをタグとして解釈し、タグの無い文字は原稿の上付き・下付きを引き継ぐ。
-- `replace_all`：`true`なら一致した全箇所に適用する。既定は`false`。
-- `scope`：照合する段落の範囲。`"p12"`、`"p10-12"`、`"p3,p10-12"`、`"p120-"`のように書く。段落番号は0始まり。
+- `old_text`：必須。原稿の変更履歴をすべて承諾した状態の本文と照合します。1段落内に収まり、（`scope`の範囲内で）一意である必要があります。
+- `new_text`：必須。置換後の文字列です。空文字列なら削除になります。`<sup>`、`<sub>`、`<plain>`だけをタグとして解釈し、タグの無い文字は原稿の上付き・下付きを引き継ぎます。
+- `replace_all`：`true`なら一致した全箇所に適用します。既定は`false`です。
+- `scope`：照合する段落の範囲です。`"p12"`、`"p10-12"`、`"p3,p10-12"`、`"p120-"`のように書きます。段落番号は0始まりです。
 
-これ以外のキー（`id`、`severity`など）があってもレコードは有効で、解釈されないまま結果に名前だけが出る。
-キー名の打ち間違いはここで分かる。
-細則は[findings_schema.md](plugins/docx-redline-ja/skills/docx-redline-ja/references/findings_schema.md)にある。
+これ以外のキー（`id`、`severity`など）があってもレコードは有効で、解釈されないまま結果に名前だけが出ます。
+キー名の打ち間違いはここで分かります。
+細則は[findings_schema.md](plugins/docx-redline-ja/skills/docx-redline-ja/references/findings_schema.md)にあります。
 
 ### 適用する
 
@@ -97,20 +141,20 @@ python3 <skill_dir>/scripts/apply_redline.py \
   --docx 原稿.docx --findings findings.jsonl --out 校正済み.docx --author "Claude Opus 5.5"
 ```
 
-- `--author`：変更履歴の著者名。Wordの校閲ペインに出る。スキルから呼ぶときは、エージェントが自分のモデル名を渡す。省略すると`AI`になる。
-- `--date`：変更履歴の日時（ISO 8601）。省略すると現在時刻（UTC）になる。固定すると出力が再現可能になる。
+- `--author`：変更履歴の著者名です。Wordの校閲ペインに出ます。スキルから呼ぶときは、エージェントが自分のモデル名を渡します。省略すると`AI`になります。
+- `--date`：変更履歴の日時（ISO 8601）です。省略すると現在時刻（UTC）になります。固定すると出力が再現可能になります。
 
-`--out`は`.docx`で終わる必要があり、`--docx`、`--findings`、`--out`、レポートのうち2つが同じファイルを指すと何も書かずに終わる。
-macOSのように大小文字を区別しないファイルシステムでの`a.docx`と`A.docx`も同じファイルとみなす。
+`--out`は`.docx`で終わる必要があり、`--docx`、`--findings`、`--out`、レポートのうち2つが同じファイルを指すと何も書かずに終わります。
+macOSのように大小文字を区別しないファイルシステムでの`a.docx`と`A.docx`も同じファイルとみなします。
 
-終了コードは3つで、`0`は検証が通ってdocxを書いた、`1`は検証が落ちてdocxを書かなかった、`2`は入力の不備で起動時に止まった、を表す。
-skipされたレコードがあっても、検証が通れば`0`で終わる。
-何が落ちたかは次のレポートで見る。
+終了コードは3つで、`0`は検証が通ってdocxを書いた、`1`は検証が落ちてdocxを書かなかった、`2`は入力の不備で起動時に止まった、を表します。
+skipされたレコードがあっても、検証が通れば`0`で終わります。
+何が落ちたかは次のレポートで見ます。
 
 ### 結果を読む
 
-レポートは`--out`の拡張子を`.result.json`に変えたパスに書かれ、stdoutにはその要約が出る。
-要約には件数、検証結果、注記と、skipされたレコードだけが含まれる。
+レポートは`--out`の拡張子を`.result.json`に変えたパスに書かれ、stdoutにはその要約が出ます。
+要約には件数、検証結果、注記と、skipされたレコードだけが含まれます。
 
 ```jsonc
 {"out": "…", "result": "…/校正済み.result.json",
@@ -121,29 +165,29 @@ skipされたレコードがあっても、検証が通れば`0`で終わる。
  "records": [/* skipしたレコードだけ。reason / detail / occurrences */]}
 ```
 
-skip理由は8つ（`invalid_record`、`crosses_paragraph`、`no_change`、`not_found`、`ambiguous`、`spans_inline_object`、`conflict`、`unsplittable_container`）で、各レコードの`detail`に説明が付く。
-よく出るのは次の3つである。
+skip理由は8つ（`invalid_record`、`crosses_paragraph`、`no_change`、`not_found`、`ambiguous`、`spans_inline_object`、`conflict`、`unsplittable_container`）で、各レコードの`detail`に説明が付きます。
+よく出るのは次の3つです。
 
-- `ambiguous`：2箇所以上に一致した。`occurrences`に前後の文脈が付くので、`old_text`を伸ばすか、`scope`で段落を絞るか、全箇所を同じに直す指摘なら`replace_all`を付ける。
-- `conflict`：他のレコードと編集範囲が重なった。重なる指摘を1レコードにまとめる。
-- `not_found`：一致が無い。全角・半角、約物、空白の違いを疑う。
+- `ambiguous`：2箇所以上に一致したときです。`occurrences`に前後の文脈が付くので、`old_text`を伸ばすか、`scope`で段落を絞るか、全箇所を同じに直す指摘なら`replace_all`を付けます。
+- `conflict`：他のレコードと編集範囲が重なったときです。重なる指摘を1レコードにまとめます。
+- `not_found`：一致が無いときです。全角・半角、約物、空白の違いを疑ってください。
 
 ### 位置を調べる
 
-`locate`と`read`は原稿を読むだけで、書き換えない。
-段落番号は`scope`、`locate`、`read`、レポートのすべてで共通である。
+`locate`と`read`は原稿を読むだけで、書き換えません。
+段落番号は`scope`、`locate`、`read`、レポートのすべてで共通です。
 
 ```bash
 python3 <skill_dir>/scripts/apply_redline.py locate --docx 原稿.docx --query "FDG-PET" --no-matches
 python3 <skill_dir>/scripts/apply_redline.py read --docx 原稿.docx --paragraphs "p10-20" --text
 ```
 
-`locate`は一致の数、一致した段落の一覧、そのまま`scope`に書ける文字列を返す。
-`--no-matches`を外すと各一致の前後の文脈も出る。
-`read`は段落ごとの本文を返し、上付き・下付きを含む段落には`<sup>`/`<sub>`付きの本文も付く。
-`--paragraphs`を付けずに`read`を呼ぶと原稿が丸ごと出るので、エージェントに読ませるときは範囲を絞る。
+`locate`は一致の数、一致した段落の一覧、そのまま`scope`に書ける文字列を返します。
+`--no-matches`を外すと各一致の前後の文脈も出ます。
+`read`は段落ごとの本文を返し、上付き・下付きを含む段落には`<sup>`/`<sub>`付きの本文も付きます。
+`--paragraphs`を付けずに`read`を呼ぶと原稿が丸ごと出るので、エージェントに読ませるときは範囲を絞ってください。
 
-変更履歴の組み方（既存の変更履歴の中に挿入するときの分割など）と検証項目の定義は[ooxml_tracked_changes.md](plugins/docx-redline-ja/skills/docx-redline-ja/references/ooxml_tracked_changes.md)にある。
+変更履歴の組み方（既存の変更履歴の中に挿入するときの分割など）と検証項目の定義は[ooxml_tracked_changes.md](plugins/docx-redline-ja/skills/docx-redline-ja/references/ooxml_tracked_changes.md)にあります。
 
 ## 開発者向け
 
@@ -154,28 +198,34 @@ pip install -r requirements-dev.txt
 python3 -m pytest -q
 ```
 
-テストに使うdocxの多くは実行時に生成する。Wordで作った4つの文書だけは`tests/fixtures/`に置いてあり、作成者や日時などのメタデータは消してある。
-日本語の本文は夏目漱石『吾輩は猫である』（青空文庫）、英語はLewis Carroll『Alice's Adventures in Wonderland』（Project Gutenberg）から取っている。
-出典と扱いは[TEST_DATA.md](TEST_DATA.md)にある。
-CIはGitHub ActionsでUbuntuとmacOS、Python 3.11〜3.13の組み合わせで回す。
+テストに使うdocxの多くは実行時に生成します。Wordで作った4つの文書だけは`tests/fixtures/`に置いてあり、作成者や日時などのメタデータは消してあります。
+日本語の本文は夏目漱石『吾輩は猫である』（青空文庫）、英語はLewis Carroll『Alice's Adventures in Wonderland』（Project Gutenberg）から取っています。
+出典と扱いは[TEST_DATA.md](TEST_DATA.md)にあります。
+CIはGitHub ActionsでUbuntuとmacOS、Python 3.11〜3.13の組み合わせで回します。
 
-`tests/test_behavior_pins.py`は、上付き・下付き、表のセル、テキストボックス、他人の変更履歴、全skip理由を踏む文書を組んで、レポートと出力XMLをスナップショットと比べる。
-意図して挙動を変えたときは`python3 tests/test_behavior_pins.py --regen`で更新し、差分を見る。
+`tests/test_behavior_pins.py`は、上付き・下付き、表のセル、テキストボックス、他人の変更履歴、全skip理由を踏む文書を組んで、レポートと出力XMLをスナップショットと比べます。
+意図して挙動を変えたときは`python3 tests/test_behavior_pins.py --regen`で更新し、差分を見ます。
 
 ### ベンチマーク
 
-`benchmarks/`に、同じ修正を他のツールで入れたときとの比較がある。
-比較対象はdocx-cli（npmの`bun-docx`）と、Anthropicが配布している`docx`スキル（OOXMLを手で書く）である。
-採点は`benchmarks/measure.py`が出力docxを直接読んで行い、どのツールの検証コードも使わない。
+`benchmarks/`に、同じ修正を他のツールで入れたときとの比較があります。
+比較対象はdocx-cli（npmの`bun-docx`）と、Anthropicが配布している`docx`スキル（OOXMLを手で書く）です。
+採点は`benchmarks/measure.py`が出力docxを直接読んで行い、どのツールの検証コードも使いません。
 
-- `run_deterministic.py`：モデルを使わず、決まった修正を各ツールに入れて、変更履歴が正しいか（承諾すると意図した本文、却下すると原文に戻る）と、変更履歴の中の文字数が最小の何倍か、を測る。
-- `run_agentic.py`：Claude Codeに原稿と修正指示を渡して、ツールの操作まで含めた一仕事をさせ、トークン数と費用を測る。APIを呼ぶので費用がかかり、CIでは回さない。
+- `run_deterministic.py`：モデルを使わず、決まった修正を各ツールに入れて、変更履歴が正しいか（承諾すると意図した本文、却下すると原文に戻る）と、変更履歴の中の文字数が最小の何倍か、を測ります。
+- `run_agentic.py`：Claude Codeに原稿と修正指示を渡して、ツールの操作まで含めた一仕事をさせ、トークン数と費用を測ります。APIを呼ぶので費用がかかり、CIでは回しません。
 
-`benchmarks/out/deterministic.md`の結果では、日本語20件の修正で変更履歴に入る文字数は、このスキルが45文字（最小と同じ）、docx-cliが1265文字（28.1倍）だった。
-英語では140文字に対して1430文字（10.2倍）で、差は日本語のほうが大きい。
-`benchmarks/out/agentic-opus-5-5/agentic.md`（claude-opus-5-5、各3回）でも、日本語6件の修正でこのスキルは12文字（最小と同じ）、docx-cliは249文字（20.8倍）、`docx`スキルは12文字だが入力トークンはこのスキルの2.6倍だった。
-`benchmarks/out/`は`.gitignore`に入っていて、数字を更新するときは手元で回す。
+`benchmarks/out/deterministic.md`の結果では、日本語20件の修正で変更履歴に入る文字数は、このスキルが45文字（最小と同じ）、docx-cliが1265文字（28.1倍）でした。
+英語では140文字に対して1430文字（10.2倍）で、差は日本語のほうが大きくなります。
+`benchmarks/out/agentic-opus-5-5/agentic.md`（claude-opus-5-5、各3回）でも、日本語6件の修正でこのスキルは12文字（最小と同じ）、docx-cliは249文字（20.8倍）、`docx`スキルは12文字ですが入力トークンはこのスキルの2.6倍でした。
+`benchmarks/out/`は`.gitignore`に入っていて、数字を更新するときは手元で回します。
+
+### READMEの図
+
+冒頭の比較図は`python3 tools/render_readme_example.py`で描き直します。
+例文から1段落のdocxを組み、同じfindingsをこのスキルとdocx-cli（`bunx bun-docx@0.28.0`）に入れ、出力docxの`w:del`/`w:ins`を読んで描くので、手で描いた部分はありません。
+Pillowと`bunx`と日本語フォントが必要です。
 
 ## ライセンス
 
-MIT。[LICENSE](LICENSE)を見てほしい。
+MITです。[LICENSE](LICENSE)を見てください。
