@@ -55,4 +55,4 @@ claude plugin validate .
 
 ## ライセンス
 
-MIT。同梱しているOOXMLスキーマと補助コードについては`THIRD_PARTY_NOTICES.md`に書いてある。
+MIT。同梱しているOOXMLスキーマと補助コードについては`THIRD_PARTY_NOTICES.md`に書いてある。　
