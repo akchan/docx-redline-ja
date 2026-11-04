@@ -1,0 +1,766 @@
+{
+ "apply": {
+  "exit": 0,
+  "stdout": "{\n  \"tool\": \"docx-redline-ja\",\n  \"out\": \"<TMP>/out.docx\",\n  \"result\": \"<TMP>/out.result.json\",\n  \"counts\": {\n    \"records\": 34,\n    \"applied\": 15,\n    \"skipped\": 19,\n    \"hunks\": 18,\n    \"by_reason\": {\n      \"ambiguous\": 1,\n      \"conflict\": 3,\n      \"crosses_paragraph\": 1,\n      \"invalid_record\": 7,\n      \"no_change\": 2,\n      \"not_found\": 3,\n      \"spans_inline_object\": 1,\n      \"unsplittable_container\": 1\n    }\n  },\n  \"verification\": {\n    \"reversible\": true,\n    \"insertions_independent\": true,\n    \"other_revisions_preserved\": true,\n    \"revisions_wellformed\": true,\n    \"media_preserved\": true\n  },\n  \"notes\": [\n    \"key(s) not in the contract were carried through unread: 'replace' on record(s) 27; 'replace_al' on record(s) 26; 'search' on record(s) 27; 'severity' on record(s) 26\",\n    \"p11: the mc:Fallback copy reads '別の箱の文学。' rather than '別の箱の文字。' and was left unchanged\"\n  ],\n  \"records\": [\n    {\n      \"index\": 5,\n      \"old_text\": \"H2O\",\n      \"new_text\": \"H2O\",\n      \"status\": \"skipped\",\n      \"reason\": \"no_change\",\n      \"detail\": \"the text and its formatting already match 'new_text'\",\n      \"matches\": 1,\n      \"occurrences\": [\n        {\n          \"paragraph\": 5,\n          \"locator\": \"p5:2-5\",\n          \"start\": 2,\n          \"end\": 5,\n          \"before\": \"水は\",\n          \"match\": \"H2O\",\n          \"after\": \"と書く。\"\n        }\n      ]\n    },\n    {\n      \"index\": 12,\n      \"old_text\": \"同じ語\",\n      \"new_text\": \"同一の語\",\n      \"status\": \"skipped\",\n      \"reason\": \"ambiguous\",\n      \"detail\": \"2 occurrences; extend 'old_text' with surrounding text to make it unique, narrow 'scope', or set \\\"replace_all\\\": true\",\n      \"matches\": 2,\n      \"occurrences\": [\n        {\n          \"paragraph\": 14,\n          \"locator\": \"p14:0-3\",\n          \"start\": 0,\n          \"end\": 3,\n          \"before\": \"\",\n          \"match\": \"同じ語\",\n          \"after\": \"と同じ語。\"\n        },\n        {\n          \"paragraph\": 14,\n          \"locator\": \"p14:4-7\",\n          \"start\": 4,\n          \"end\": 7,\n          \"before\": \"同じ語と\",\n          \"match\": \"同じ語\",\n          \"after\": \"。\"\n        }\n      ]\n    },\n    {\n      \"index\": 13,\n      \"old_text\": \"ええ\",\n      \"new_text\": \"えー\",\n      \"status\": \"skipped\",\n      \"replace_all\": true,\n      \"reason\": \"conflict\",\n      \"detail\": \"the 2 matches of 'old_text' overlap each other; extend 'old_text' so its occurrences are disjoint\",\n      \"matches\": 2,\n      \"occurrences\": [\n        {\n          \"paragraph\": 15,\n          \"locator\": \"p15:0-2\",\n          \"start\": 0,\n          \"end\": 2,\n          \"before\": \"\",\n          \"match\": \"ええ\",\n          \"after\": \"え\"\n        },\n        {\n          \"paragraph\": 15,\n          \"locator\": \"p15:1-3\",\n          \"start\": 1,\n          \"end\": 3,\n          \"before\": \"え\",\n          \"match\": \"ええ\",\n          \"after\": \"\"\n        }\n      ]\n    },\n    {\n      \"index\": 15,\n      \"old_text\": \"範囲の語\",\n      \"new_text\": \"範囲外の語\",\n      \"status\": \"skipped\",\n      \"scope\": \"p999\",\n      \"out_of_scope\": 2,\n      \"reason\": \"not_found\",\n      \"detail\": \"2 occurrence(s) in the document, none inside scope p999\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 16,\n      \"old_text\": \"繰り返し\",\n      \"new_text\": \"x\",\n      \"status\": \"skipped\",\n      \"scope\": \"p0-2,p20-\",\n      \"out_of_scope\": 2,\n      \"reason\": \"not_found\",\n      \"detail\": \"2 occurrence(s) in the document, none inside scope p0-2,p20-\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 17,\n      \"old_text\": \"前\\t後\",\n      \"new_text\": \"前後\",\n      \"status\": \"skipped\",\n      \"reason\": \"spans_inline_object\",\n      \"detail\": \"match spans a tab, line break, image, field or footnote mark\",\n      \"matches\": 1,\n      \"occurrences\": [\n        {\n          \"paragraph\": 18,\n          \"locator\": \"p18:0-3\",\n          \"start\": 0,\n          \"end\": 3,\n          \"before\": \"\",\n          \"match\": \"前\\t後\",\n          \"after\": \"の文。\"\n        }\n      ]\n    },\n    {\n      \"index\": 18,\n      \"old_text\": \"衝突する\",\n      \"new_text\": \"ぶつかる\",\n      \"status\": \"skipped\",\n      \"reason\": \"conflict\",\n      \"detail\": \"overlaps record(s) 19\",\n      \"matches\": 1\n    },\n    {\n      \"index\": 19,\n      \"old_text\": \"する文\",\n      \"new_text\": \"した文\",\n      \"status\": \"skipped\",\n      \"reason\": \"conflict\",\n      \"detail\": \"overlaps record(s) 18\",\n      \"matches\": 1\n    },\n    {\n      \"index\": 22,\n      \"old_text\": \"欄内の\",\n      \"new_text\": \"欄内での\",\n      \"status\": \"skipped\",\n      \"reason\": \"unsplittable_container\",\n      \"detail\": \"the insertion point sits inside an existing revision (w:ins or w:moveTo, by any author -- an earlier revision under our own author name is just as rejectable) behind w:fldSimple, which cannot be split without changing the document structure\",\n      \"matches\": 1,\n      \"occurrences\": [\n        {\n          \"paragraph\": 21,\n          \"locator\": \"p21:0-3\",\n          \"start\": 0,\n          \"end\": 3,\n          \"before\": \"\",\n          \"match\": \"欄内の\",\n          \"after\": \"文字\"\n        }\n      ]\n    },\n    {\n      \"index\": 23,\n      \"old_text\": \"吾輩は\",\n      \"new_text\": \"吾輩は\",\n      \"status\": \"skipped\",\n      \"reason\": \"no_change\",\n      \"detail\": \"the text and its formatting already match 'new_text'\",\n      \"matches\": 1,\n      \"occurrences\": [\n        {\n          \"paragraph\": 0,\n          \"locator\": \"p0:0-3\",\n          \"start\": 0,\n          \"end\": 3,\n          \"before\": \"\",\n          \"match\": \"吾輩は\",\n          \"after\": \"猫である。名前はまだ無い。\"\n        }\n      ]\n    },\n    {\n      \"index\": 24,\n      \"old_text\": \"存在しない語\",\n      \"new_text\": \"x\",\n      \"status\": \"skipped\",\n      \"reason\": \"not_found\",\n      \"detail\": \"no occurrence in the accepted-view text\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 25,\n      \"old_text\": \"無関係\",\n      \"new_text\": \"<sup>x\",\n      \"status\": \"skipped\",\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 28: unclosed tag <sup>\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 27,\n      \"old_text\": \"None\",\n      \"new_text\": \"None\",\n      \"status\": \"skipped\",\n      \"ignored_keys\": [\n        \"replace\",\n        \"search\"\n      ],\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 30: 'old_text' is missing or not a string\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 28,\n      \"old_text\": \"古い\",\n      \"new_text\": \"新しい\",\n      \"status\": \"skipped\",\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 31: 'replace_all' must be a boolean\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 29,\n      \"old_text\": \"古い\",\n      \"new_text\": \"新\\u0001しい\",\n      \"status\": \"skipped\",\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 32: control character(s) not allowed: U+0001\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 30,\n      \"old_text\": \"古い\\n\",\n      \"new_text\": \"新しい\",\n      \"status\": \"skipped\",\n      \"reason\": \"crosses_paragraph\",\n      \"detail\": \"line 33: old_text/new_text must stay inside a single paragraph (line break found)\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 31,\n      \"old_text\": \"\",\n      \"new_text\": \"x\",\n      \"status\": \"skipped\",\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 34: 'old_text' must not be empty\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 32,\n      \"old_text\": \"\",\n      \"new_text\": \"\",\n      \"status\": \"skipped\",\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 35: record is not an object\",\n      \"matches\": 0\n    },\n    {\n      \"index\": 33,\n      \"old_text\": \"\",\n      \"new_text\": \"\",\n      \"status\": \"skipped\",\n      \"reason\": \"invalid_record\",\n      \"detail\": \"line 36: invalid JSON (Expecting property name enclosed in double quotes)\",\n      \"matches\": 0\n    }\n  ],\n  \"records_omitted\": 15\n}\n",
+  "stderr": ""
+ },
+ "apply.result": {
+  "schema_version": 7,
+  "tool": "docx-redline-ja",
+  "source": "<TMP>/pins.docx",
+  "findings": "<TMP>/pins.jsonl",
+  "out": "<TMP>/out.docx",
+  "author": "Bench",
+  "date": "2026-01-01T00:00:00Z",
+  "counts": {
+   "records": 34,
+   "applied": 15,
+   "skipped": 19,
+   "hunks": 18,
+   "by_reason": {
+    "ambiguous": 1,
+    "conflict": 3,
+    "crosses_paragraph": 1,
+    "invalid_record": 7,
+    "no_change": 2,
+    "not_found": 3,
+    "spans_inline_object": 1,
+    "unsplittable_container": 1
+   }
+  },
+  "verification": {
+   "reversible": true,
+   "insertions_independent": true,
+   "other_revisions_preserved": true,
+   "revisions_wellformed": true,
+   "media_preserved": true
+  },
+  "notes": [
+   "key(s) not in the contract were carried through unread: 'replace' on record(s) 27; 'replace_al' on record(s) 26; 'search' on record(s) 27; 'severity' on record(s) 26",
+   "p11: the mc:Fallback copy reads '別の箱の文学。' rather than '別の箱の文字。' and was left unchanged"
+  ],
+  "records": [
+   {
+    "index": 0,
+    "old_text": "名前はまだ無い",
+    "new_text": "名前はもう有る",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 0,
+      "locator": "p0:11-15",
+      "start": 11,
+      "end": 15,
+      "delete": "まだ無い",
+      "insert": "もう有る",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 4,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 1,
+    "old_text": "10mm3で",
+    "new_text": "20mm3で",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 1,
+      "locator": "p1:3-4",
+      "start": 3,
+      "end": 4,
+      "delete": "1",
+      "insert": "2",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "old_text": "mm3と",
+    "new_text": "mm<sup>3</sup>と",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 2,
+      "locator": "p2:5-6",
+      "start": 5,
+      "end": 6,
+      "delete": "3",
+      "insert": "3",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "superscript"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "old_text": "献12に",
+    "new_text": "献1,2に",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 3,
+      "locator": "p3:3-3",
+      "start": 3,
+      "end": 3,
+      "delete": "",
+      "insert": ",",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "superscript"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 4,
+    "old_text": "注aを",
+    "new_text": "注<plain>a</plain>を",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 4,
+      "locator": "p4:1-2",
+      "start": 1,
+      "end": 2,
+      "delete": "a",
+      "insert": "a",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 5,
+    "old_text": "H2O",
+    "new_text": "H2O",
+    "status": "skipped",
+    "reason": "no_change",
+    "detail": "the text and its formatting already match 'new_text'",
+    "matches": 1,
+    "occurrences": [
+     {
+      "paragraph": 5,
+      "locator": "p5:2-5",
+      "start": 2,
+      "end": 5,
+      "before": "水は",
+      "match": "H2O",
+      "after": "と書く。"
+     }
+    ]
+   },
+   {
+    "index": 6,
+    "old_text": "献7。",
+    "new_text": "献7a。",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 6,
+      "locator": "p6:6-6",
+      "start": 6,
+      "end": 6,
+      "delete": "",
+      "insert": "a",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 7,
+    "old_text": "表の中",
+    "new_text": "表中",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 7,
+      "locator": "p7:1-2",
+      "start": 1,
+      "end": 2,
+      "delete": "の",
+      "insert": ""
+     }
+    ]
+   },
+   {
+    "index": 8,
+    "old_text": "箱の中",
+    "new_text": "箱内",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 9,
+      "locator": "p9:1-3",
+      "start": 1,
+      "end": 3,
+      "delete": "の中",
+      "insert": "内",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 9,
+    "old_text": "別の箱",
+    "new_text": "他の箱",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 11,
+      "locator": "p11:0-1",
+      "start": 0,
+      "end": 1,
+      "delete": "別",
+      "insert": "他",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 10,
+    "old_text": "選択肢の",
+    "new_text": "選択の",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 12,
+      "locator": "p12:2-3",
+      "start": 2,
+      "end": 3,
+      "delete": "肢",
+      "insert": ""
+     }
+    ]
+   },
+   {
+    "index": 11,
+    "old_text": "繰り返し",
+    "new_text": "くりかえし",
+    "status": "applied",
+    "replace_all": true,
+    "matches": 2,
+    "hunks": [
+     {
+      "paragraph": 13,
+      "locator": "p13:0-1",
+      "start": 0,
+      "end": 1,
+      "delete": "繰",
+      "insert": "く",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     },
+     {
+      "paragraph": 13,
+      "locator": "p13:2-3",
+      "start": 2,
+      "end": 3,
+      "delete": "返",
+      "insert": "かえ",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 2,
+        "kind": "baseline"
+       }
+      ]
+     },
+     {
+      "paragraph": 13,
+      "locator": "p13:5-6",
+      "start": 5,
+      "end": 6,
+      "delete": "繰",
+      "insert": "く",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     },
+     {
+      "paragraph": 13,
+      "locator": "p13:7-8",
+      "start": 7,
+      "end": 8,
+      "delete": "返",
+      "insert": "かえ",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 2,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 12,
+    "old_text": "同じ語",
+    "new_text": "同一の語",
+    "status": "skipped",
+    "reason": "ambiguous",
+    "detail": "2 occurrences; extend 'old_text' with surrounding text to make it unique, narrow 'scope', or set \"replace_all\": true",
+    "matches": 2,
+    "occurrences": [
+     {
+      "paragraph": 14,
+      "locator": "p14:0-3",
+      "start": 0,
+      "end": 3,
+      "before": "",
+      "match": "同じ語",
+      "after": "と同じ語。"
+     },
+     {
+      "paragraph": 14,
+      "locator": "p14:4-7",
+      "start": 4,
+      "end": 7,
+      "before": "同じ語と",
+      "match": "同じ語",
+      "after": "。"
+     }
+    ]
+   },
+   {
+    "index": 13,
+    "old_text": "ええ",
+    "new_text": "えー",
+    "status": "skipped",
+    "replace_all": true,
+    "reason": "conflict",
+    "detail": "the 2 matches of 'old_text' overlap each other; extend 'old_text' so its occurrences are disjoint",
+    "matches": 2,
+    "occurrences": [
+     {
+      "paragraph": 15,
+      "locator": "p15:0-2",
+      "start": 0,
+      "end": 2,
+      "before": "",
+      "match": "ええ",
+      "after": "え"
+     },
+     {
+      "paragraph": 15,
+      "locator": "p15:1-3",
+      "start": 1,
+      "end": 3,
+      "before": "え",
+      "match": "ええ",
+      "after": ""
+     }
+    ]
+   },
+   {
+    "index": 14,
+    "old_text": "範囲の語",
+    "new_text": "範囲内の語",
+    "status": "applied",
+    "scope": "p17",
+    "out_of_scope": 1,
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 17,
+      "locator": "p17:2-2",
+      "start": 2,
+      "end": 2,
+      "delete": "",
+      "insert": "内",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 15,
+    "old_text": "範囲の語",
+    "new_text": "範囲外の語",
+    "status": "skipped",
+    "scope": "p999",
+    "out_of_scope": 2,
+    "reason": "not_found",
+    "detail": "2 occurrence(s) in the document, none inside scope p999",
+    "matches": 0
+   },
+   {
+    "index": 16,
+    "old_text": "繰り返し",
+    "new_text": "x",
+    "status": "skipped",
+    "scope": "p0-2,p20-",
+    "out_of_scope": 2,
+    "reason": "not_found",
+    "detail": "2 occurrence(s) in the document, none inside scope p0-2,p20-",
+    "matches": 0
+   },
+   {
+    "index": 17,
+    "old_text": "前\t後",
+    "new_text": "前後",
+    "status": "skipped",
+    "reason": "spans_inline_object",
+    "detail": "match spans a tab, line break, image, field or footnote mark",
+    "matches": 1,
+    "occurrences": [
+     {
+      "paragraph": 18,
+      "locator": "p18:0-3",
+      "start": 0,
+      "end": 3,
+      "before": "",
+      "match": "前\t後",
+      "after": "の文。"
+     }
+    ]
+   },
+   {
+    "index": 18,
+    "old_text": "衝突する",
+    "new_text": "ぶつかる",
+    "status": "skipped",
+    "reason": "conflict",
+    "detail": "overlaps record(s) 19",
+    "matches": 1
+   },
+   {
+    "index": 19,
+    "old_text": "する文",
+    "new_text": "した文",
+    "status": "skipped",
+    "reason": "conflict",
+    "detail": "overlaps record(s) 18",
+    "matches": 1
+   },
+   {
+    "index": 20,
+    "old_text": "の挿",
+    "new_text": "の大挿",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 20,
+      "locator": "p20:5-5",
+      "start": 5,
+      "end": 5,
+      "delete": "",
+      "insert": "大",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 21,
+    "old_text": "挿入文",
+    "new_text": "挿文",
+    "status": "applied",
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 20,
+      "locator": "p20:6-7",
+      "start": 6,
+      "end": 7,
+      "delete": "入",
+      "insert": ""
+     }
+    ]
+   },
+   {
+    "index": 22,
+    "old_text": "欄内の",
+    "new_text": "欄内での",
+    "status": "skipped",
+    "reason": "unsplittable_container",
+    "detail": "the insertion point sits inside an existing revision (w:ins or w:moveTo, by any author -- an earlier revision under our own author name is just as rejectable) behind w:fldSimple, which cannot be split without changing the document structure",
+    "matches": 1,
+    "occurrences": [
+     {
+      "paragraph": 21,
+      "locator": "p21:0-3",
+      "start": 0,
+      "end": 3,
+      "before": "",
+      "match": "欄内の",
+      "after": "文字"
+     }
+    ]
+   },
+   {
+    "index": 23,
+    "old_text": "吾輩は",
+    "new_text": "吾輩は",
+    "status": "skipped",
+    "reason": "no_change",
+    "detail": "the text and its formatting already match 'new_text'",
+    "matches": 1,
+    "occurrences": [
+     {
+      "paragraph": 0,
+      "locator": "p0:0-3",
+      "start": 0,
+      "end": 3,
+      "before": "",
+      "match": "吾輩は",
+      "after": "猫である。名前はまだ無い。"
+     }
+    ]
+   },
+   {
+    "index": 24,
+    "old_text": "存在しない語",
+    "new_text": "x",
+    "status": "skipped",
+    "reason": "not_found",
+    "detail": "no occurrence in the accepted-view text",
+    "matches": 0
+   },
+   {
+    "index": 25,
+    "old_text": "無関係",
+    "new_text": "<sup>x",
+    "status": "skipped",
+    "reason": "invalid_record",
+    "detail": "line 28: unclosed tag <sup>",
+    "matches": 0
+   },
+   {
+    "index": 26,
+    "old_text": "無関係",
+    "new_text": "無関心",
+    "status": "applied",
+    "ignored_keys": [
+     "replace_al",
+     "severity"
+    ],
+    "matches": 1,
+    "hunks": [
+     {
+      "paragraph": 23,
+      "locator": "p23:2-3",
+      "start": 2,
+      "end": 3,
+      "delete": "係",
+      "insert": "心",
+      "insert_format": [
+       {
+        "start": 0,
+        "end": 1,
+        "kind": "baseline"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "index": 27,
+    "old_text": "None",
+    "new_text": "None",
+    "status": "skipped",
+    "ignored_keys": [
+     "replace",
+     "search"
+    ],
+    "reason": "invalid_record",
+    "detail": "line 30: 'old_text' is missing or not a string",
+    "matches": 0
+   },
+   {
+    "index": 28,
+    "old_text": "古い",
+    "new_text": "新しい",
+    "status": "skipped",
+    "reason": "invalid_record",
+    "detail": "line 31: 'replace_all' must be a boolean",
+    "matches": 0
+   },
+   {
+    "index": 29,
+    "old_text": "古い",
+    "new_text": "新\u0001しい",
+    "status": "skipped",
+    "reason": "invalid_record",
+    "detail": "line 32: control character(s) not allowed: U+0001",
+    "matches": 0
+   },
+   {
+    "index": 30,
+    "old_text": "古い\n",
+    "new_text": "新しい",
+    "status": "skipped",
+    "reason": "crosses_paragraph",
+    "detail": "line 33: old_text/new_text must stay inside a single paragraph (line break found)",
+    "matches": 0
+   },
+   {
+    "index": 31,
+    "old_text": "",
+    "new_text": "x",
+    "status": "skipped",
+    "reason": "invalid_record",
+    "detail": "line 34: 'old_text' must not be empty",
+    "matches": 0
+   },
+   {
+    "index": 32,
+    "old_text": "",
+    "new_text": "",
+    "status": "skipped",
+    "reason": "invalid_record",
+    "detail": "line 35: record is not an object",
+    "matches": 0
+   },
+   {
+    "index": 33,
+    "old_text": "",
+    "new_text": "",
+    "status": "skipped",
+    "reason": "invalid_record",
+    "detail": "line 36: invalid JSON (Expecting property name enclosed in double quotes)",
+    "matches": 0
+   }
+  ]
+ },
+ "apply.document": "[\"[Content_Types].xml\", \"_rels/.rels\", \"word/document.xml\", \"word/media/image1.png\"]\n<w:document xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\"><w:body><w:p w14:paraId=\"1A2B3C4D\"><w:r><w:t xml:space=\"preserve\">吾輩は猫である。名前は</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"907\"><w:r><w:delText xml:space=\"preserve\">まだ無い</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"906\"><w:r><w:t>もう有る</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">体積は</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"909\"><w:r><w:delText xml:space=\"preserve\">1</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"908\"><w:r><w:t>2</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">0mm</w:t></w:r><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:t xml:space=\"preserve\">3</w:t></w:r><w:r><w:t xml:space=\"preserve\">である。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">単位はmm</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"911\"><w:r><w:delText xml:space=\"preserve\">3</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"910\"><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:t>3</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">とする。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">文献</w:t></w:r><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:t xml:space=\"preserve\">1</w:t></w:r><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"912\"><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:t>,</w:t></w:r></w:ins><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:t xml:space=\"preserve\">2</w:t></w:r><w:r><w:t xml:space=\"preserve\">によると、</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">注</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"914\"><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:delText xml:space=\"preserve\">a</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"913\"><w:r><w:t>a</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">を参照。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">水はH</w:t></w:r><w:r><w:rPr><w:vertAlign w:val=\"subscript\"></w:vertAlign></w:rPr><w:t xml:space=\"preserve\">2</w:t></w:r><w:r><w:t xml:space=\"preserve\">Oと書く。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">末尾の文献</w:t></w:r><w:r><w:rPr><w:vertAlign w:val=\"superscript\"></w:vertAlign></w:rPr><w:t xml:space=\"preserve\">7</w:t></w:r><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"915\"><w:r><w:t>a</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">。</w:t></w:r></w:p><w:tbl><w:tr><w:tc><w:p><w:r><w:t xml:space=\"preserve\">表</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"916\"><w:r><w:delText xml:space=\"preserve\">の</w:delText></w:r></w:del><w:r><w:t xml:space=\"preserve\">中の文章です。</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:p><w:r><w:t xml:space=\"preserve\">図の説明</w:t></w:r><w:r><mc:AlternateContent><mc:Choice Requires=\"wps\"><w:drawing><w:txbxContent><w:p><w:r><w:t xml:space=\"preserve\">箱</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"918\"><w:r><w:delText xml:space=\"preserve\">の中</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"917\"><w:r><w:t>内</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">の文字です。</w:t></w:r></w:p></w:txbxContent></w:drawing></mc:Choice><mc:Fallback><w:pict><w:txbxContent><w:p><w:r><w:t xml:space=\"preserve\">箱</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"920\"><w:r><w:delText xml:space=\"preserve\">の中</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"919\"><w:r><w:t>内</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">の文字です。</w:t></w:r></w:p></w:txbxContent></w:pict></mc:Fallback></mc:AlternateContent></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">別図</w:t></w:r><w:r><mc:AlternateContent><mc:Choice Requires=\"wps\"><w:drawing><w:txbxContent><w:p><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"922\"><w:r><w:delText xml:space=\"preserve\">別</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"921\"><w:r><w:t>他</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">の箱の文字。</w:t></w:r></w:p></w:txbxContent></w:drawing></mc:Choice><mc:Fallback><w:pict><w:txbxContent><w:p><w:r><w:t xml:space=\"preserve\">別の箱の文学。</w:t></w:r></w:p></w:txbxContent></w:pict></mc:Fallback></mc:AlternateContent></w:r></w:p><w:p><mc:AlternateContent><mc:Choice><w:r><w:t xml:space=\"preserve\">選択</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"923\"><w:r><w:delText xml:space=\"preserve\">肢</w:delText></w:r></w:del><w:r><w:t xml:space=\"preserve\">の文字</w:t></w:r></mc:Choice><mc:Fallback><w:r><w:t xml:space=\"preserve\">代替の文字</w:t></w:r></mc:Fallback></mc:AlternateContent></w:p><w:p><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"931\"><w:r><w:delText xml:space=\"preserve\">繰</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"930\"><w:r><w:t>く</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">り</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"929\"><w:r><w:delText xml:space=\"preserve\">返</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"928\"><w:r><w:t>かえ</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">し、</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"927\"><w:r><w:delText xml:space=\"preserve\">繰</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"926\"><w:r><w:t>く</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">り</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"925\"><w:r><w:delText xml:space=\"preserve\">返</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"924\"><w:r><w:t>かえ</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">し。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">同じ語と同じ語。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">えええ</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">範囲の語。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">範囲</w:t></w:r><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"932\"><w:r><w:t>内</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">の語。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">前</w:t></w:r><w:r><w:tab></w:tab></w:r><w:r><w:t xml:space=\"preserve\">後の文。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">衝突する文章。</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">前文</w:t></w:r><w:ins w:author=\"他人\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"901\"><w:r><w:t xml:space=\"preserve\">他人の</w:t></w:r></w:ins><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"935\"><w:r><w:t>大</w:t></w:r></w:ins><w:ins w:author=\"他人\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"934\"><w:r><w:t xml:space=\"preserve\">挿</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"933\"><w:r><w:delText xml:space=\"preserve\">入</w:delText></w:r></w:del><w:r><w:t xml:space=\"preserve\">文</w:t></w:r></w:ins><w:del w:author=\"他人\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"902\"><w:r><w:delText xml:space=\"preserve\">消された</w:delText></w:r></w:del><w:r><w:t xml:space=\"preserve\">後文。</w:t></w:r></w:p><w:p><w:ins w:author=\"他人\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"903\"><w:fldSimple w:instr=\"PAGE\"><w:r><w:t xml:space=\"preserve\">欄内の文字</w:t></w:r></w:fldSimple></w:ins></w:p><w:p><w:r><w:t xml:space=\"preserve\">古い</w:t></w:r><w:ins w:author=\"他人\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"904\"><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"905\"><w:r><w:t xml:space=\"preserve\">入れ子</w:t></w:r></w:ins></w:ins></w:p><w:p><w:r><w:t xml:space=\"preserve\">無関</w:t></w:r><w:del w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"937\"><w:r><w:delText xml:space=\"preserve\">係</w:delText></w:r></w:del><w:ins w:author=\"Bench\" w:date=\"2026-01-01T00:00:00Z\" w:id=\"936\"><w:r><w:t>心</w:t></w:r></w:ins><w:r><w:t xml:space=\"preserve\">な最後の段落。</w:t></w:r></w:p><w:sectPr></w:sectPr></w:body></w:document>",
+ "apply.same_out": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Error: --docx (<TMP>/pins.docx) and --out (<TMP>/pins.docx) are the same file; each of them must name a file of its own -- inputs are never written to, and one output must not overwrite the other\n"
+ },
+ "apply.bad_out_suffix": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Error: --out (<TMP>/x.txt) must end in .docx: the output is a Word package, and writing one under another extension has meant clobbering an input\n"
+ },
+ "apply.bad_date": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "usage: apply_redline.py [-h] --docx DOCX --findings FINDINGS --out OUT\n                        [--author AUTHOR] [--date ISO8601]\napply_redline.py: error: argument --date: 'soon' is not an ISO 8601 timestamp (expected e.g. 2026-08-17T00:00:00Z)\n"
+ },
+ "locate.one": {
+  "exit": 0,
+  "stdout": "{\n  \"source\": \"<TMP>/pins.docx\",\n  \"queries\": [\n    {\n      \"query\": \"繰り返し\",\n      \"count\": 2,\n      \"paragraphs\": [\n        \"p13\"\n      ],\n      \"scope\": \"p13\",\n      \"matches\": [\n        {\n          \"paragraph\": 13,\n          \"locator\": \"p13:0-4\",\n          \"start\": 0,\n          \"end\": 4,\n          \"before\": \"\",\n          \"match\": \"繰り返し\",\n          \"after\": \"、繰り返し。\"\n        },\n        {\n          \"paragraph\": 13,\n          \"locator\": \"p13:5-9\",\n          \"start\": 5,\n          \"end\": 9,\n          \"before\": \"繰り返し、\",\n          \"match\": \"繰り返し\",\n          \"after\": \"。\"\n        }\n      ]\n    }\n  ]\n}\n",
+  "stderr": ""
+ },
+ "locate.many": {
+  "exit": 0,
+  "stdout": "{\n  \"source\": \"<TMP>/pins.docx\",\n  \"queries\": [\n    {\n      \"query\": \"範囲の語\",\n      \"count\": 2,\n      \"paragraphs\": [\n        \"p16\",\n        \"p17\"\n      ],\n      \"scope\": \"p16-17\",\n      \"matches\": [\n        {\n          \"paragraph\": 16,\n          \"locator\": \"p16:0-4\",\n          \"start\": 0,\n          \"end\": 4,\n          \"before\": \"\",\n          \"match\": \"範囲の語\",\n          \"after\": \"。\"\n        },\n        {\n          \"paragraph\": 17,\n          \"locator\": \"p17:0-4\",\n          \"start\": 0,\n          \"end\": 4,\n          \"before\": \"\",\n          \"match\": \"範囲の語\",\n          \"after\": \"。\"\n        }\n      ]\n    },\n    {\n      \"query\": \"無い語\",\n      \"count\": 0,\n      \"paragraphs\": [],\n      \"scope\": \"\",\n      \"matches\": []\n    }\n  ]\n}\n",
+  "stderr": ""
+ },
+ "locate.no_matches": {
+  "exit": 0,
+  "stdout": "{\n  \"source\": \"<TMP>/pins.docx\",\n  \"queries\": [\n    {\n      \"query\": \"の\",\n      \"count\": 15,\n      \"paragraphs\": [\n        \"p6\",\n        \"p7\",\n        \"p8\",\n        \"p9\",\n        \"p11\",\n        \"p12\",\n        \"p16\",\n        \"p17\",\n        \"p18\",\n        \"p20\",\n        \"p21\",\n        \"p23\"\n      ],\n      \"scope\": \"p6-9,p11-12,p16-18,p20-21,p23\"\n    }\n  ]\n}\n",
+  "stderr": ""
+ },
+ "read.json": {
+  "exit": 0,
+  "stdout": "{\n  \"source\": \"<TMP>/pins.docx\",\n  \"paragraph_count\": 24,\n  \"paragraphs\": [\n    {\n      \"paragraph\": 0,\n      \"text\": \"吾輩は猫である。名前はまだ無い。\"\n    },\n    {\n      \"paragraph\": 1,\n      \"text\": \"体積は10mm3である。\",\n      \"text_tagged\": \"体積は10mm<sup>3</sup>である。\"\n    },\n    {\n      \"paragraph\": 2,\n      \"text\": \"単位はmm3とする。\"\n    },\n    {\n      \"paragraph\": 3,\n      \"text\": \"文献12によると、\",\n      \"text_tagged\": \"文献<sup>12</sup>によると、\"\n    },\n    {\n      \"paragraph\": 4,\n      \"text\": \"注aを参照。\",\n      \"text_tagged\": \"注<sup>a</sup>を参照。\"\n    },\n    {\n      \"paragraph\": 5,\n      \"text\": \"水はH2Oと書く。\",\n      \"text_tagged\": \"水はH<sub>2</sub>Oと書く。\"\n    },\n    {\n      \"paragraph\": 6,\n      \"text\": \"末尾の文献7。\",\n      \"text_tagged\": \"末尾の文献<sup>7</sup>。\"\n    },\n    {\n      \"paragraph\": 7,\n      \"text\": \"表の中の文章です。\"\n    },\n    {\n      \"paragraph\": 8,\n      \"text\": \"図の説明\\u0000\"\n    },\n    {\n      \"paragraph\": 9,\n      \"text\": \"箱の中の文字です。\"\n    },\n    {\n      \"paragraph\": 10,\n      \"text\": \"別図\\u0000\"\n    },\n    {\n      \"paragraph\": 11,\n      \"text\": \"別の箱の文字。\"\n    },\n    {\n      \"paragraph\": 12,\n      \"text\": \"選択肢の文字\"\n    },\n    {\n      \"paragraph\": 13,\n      \"text\": \"繰り返し、繰り返し。\"\n    },\n    {\n      \"paragraph\": 14,\n      \"text\": \"同じ語と同じ語。\"\n    },\n    {\n      \"paragraph\": 15,\n      \"text\": \"えええ\"\n    },\n    {\n      \"paragraph\": 16,\n      \"text\": \"範囲の語。\"\n    },\n    {\n      \"paragraph\": 17,\n      \"text\": \"範囲の語。\"\n    },\n    {\n      \"paragraph\": 18,\n      \"text\": \"前\\t後の文。\"\n    },\n    {\n      \"paragraph\": 19,\n      \"text\": \"衝突する文章。\"\n    },\n    {\n      \"paragraph\": 20,\n      \"text\": \"前文他人の挿入文後文。\"\n    },\n    {\n      \"paragraph\": 21,\n      \"text\": \"欄内の文字\"\n    },\n    {\n      \"paragraph\": 22,\n      \"text\": \"古い入れ子\"\n    },\n    {\n      \"paragraph\": 23,\n      \"text\": \"無関係な最後の段落。\"\n    }\n  ]\n}\n",
+  "stderr": ""
+ },
+ "read.text": {
+  "exit": 0,
+  "stdout": "p0\t吾輩は猫である。名前はまだ無い。\np1\t体積は10mm<sup>3</sup>である。\np2\t単位はmm3とする。\np3\t文献<sup>12</sup>によると、\np4\t注<sup>a</sup>を参照。\np5\t水はH<sub>2</sub>Oと書く。\np6\t末尾の文献<sup>7</sup>。\np7\t表の中の文章です。\np8\t図の説明\u0000\np9\t箱の中の文字です。\np10\t別図\u0000\np11\t別の箱の文字。\np12\t選択肢の文字\np13\t繰り返し、繰り返し。\np14\t同じ語と同じ語。\np15\tえええ\np16\t範囲の語。\np17\t範囲の語。\np18\t前 後の文。\np19\t衝突する文章。\np20\t前文他人の挿入文後文。\np21\t欄内の文字\np22\t古い入れ子\np23\t無関係な最後の段落。\n",
+  "stderr": ""
+ },
+ "read.paragraphs": {
+  "exit": 0,
+  "stdout": "{\n  \"source\": \"<TMP>/pins.docx\",\n  \"paragraph_count\": 24,\n  \"scope\": \"p1-3,p20-\",\n  \"listed\": 7,\n  \"paragraphs\": [\n    {\n      \"paragraph\": 1,\n      \"text\": \"体積は10mm3である。\",\n      \"text_tagged\": \"体積は10mm<sup>3</sup>である。\"\n    },\n    {\n      \"paragraph\": 2,\n      \"text\": \"単位はmm3とする。\"\n    },\n    {\n      \"paragraph\": 3,\n      \"text\": \"文献12によると、\",\n      \"text_tagged\": \"文献<sup>12</sup>によると、\"\n    },\n    {\n      \"paragraph\": 20,\n      \"text\": \"前文他人の挿入文後文。\"\n    },\n    {\n      \"paragraph\": 21,\n      \"text\": \"欄内の文字\"\n    },\n    {\n      \"paragraph\": 22,\n      \"text\": \"古い入れ子\"\n    },\n    {\n      \"paragraph\": 23,\n      \"text\": \"無関係な最後の段落。\"\n    }\n  ]\n}\n",
+  "stderr": ""
+ },
+ "read.bad_scope": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Error: --paragraphs: 'q1' is not a paragraph range; write e.g. \"p12\", \"p10-12\" or \"p120-\" (p120 to the end)\n"
+ },
+ "broken.apply": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Error: <TMP>/broken.docx is not a readable .docx (zip) package: File is not a zip file\n"
+ },
+ "broken.locate": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Error: <TMP>/broken.docx is not a readable .docx (zip) package: File is not a zip file\n"
+ },
+ "broken.read": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Error: <TMP>/broken.docx is not a readable .docx (zip) package: File is not a zip file\n"
+ }
+}

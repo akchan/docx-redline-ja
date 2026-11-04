@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+dist/
+build/
+*.docx
+!tests/fixtures/*.docx
+*.result.json
+tests/generated/
+
+# Benchmark artefacts (regenerated, never committed)
+benchmarks/corpus/
+benchmarks/out/

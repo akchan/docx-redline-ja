@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "docx-redline-ja",
+  "description": "Minimal Word (.docx) tracked changes from JSONL old/new text pairs, with a character-level diff that keeps Japanese redlines as small as the edit",
+  "owner": {
+    "name": "akchan"
+  },
+  "plugins": [
+    {
+      "name": "docx-redline-ja",
+      "source": "./plugins/docx-redline-ja",
+      "description": "Apply old/new text pairs as minimal native Word tracked changes, down to the character in Japanese",
+      "version": "0.1.0",
+      "author": {
+        "name": "akchan"
+      },
+      "category": "productivity"
+    }
+  ]
+}

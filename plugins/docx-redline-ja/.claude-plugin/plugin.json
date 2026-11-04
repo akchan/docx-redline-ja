@@ -1,0 +1,20 @@
+{
+  "name": "docx-redline-ja",
+  "version": "0.1.0",
+  "description": "Apply JSONL old/new text pairs as minimal native Word tracked changes, including precise edits in Japanese text.",
+  "author": {
+    "name": "akchan"
+  },
+  "repository": "https://github.com/akchan/docx-redline-ja",
+  "license": "MIT",
+  "keywords": [
+    "docx",
+    "word",
+    "redline",
+    "tracked-changes",
+    "japanese",
+    "claude-code",
+    "ooxml",
+    "jsonl"
+  ]
+}
