@@ -131,8 +131,9 @@ python3 -m pytest -q
 claude plugin validate .
 ```
 
-Japanese and English test DOCX files are generated during each test run from
-short excerpts of Natsume Soseki's *I Am a Cat* and Lewis Carroll's *Alice's
+Most test DOCX files are generated during each test run; four documents made in
+Word, with their personal metadata removed, live in `tests/fixtures/`. The text
+comes from short excerpts of Natsume Soseki's *I Am a Cat* and Lewis Carroll's *Alice's
 Adventures in Wonderland*, both in the public domain. See `TEST_DATA.md` for
 sources.
 

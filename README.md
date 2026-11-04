@@ -154,7 +154,7 @@ pip install -r requirements-dev.txt
 python3 -m pytest -q
 ```
 
-テストに使うdocxは実行時に生成する。
+テストに使うdocxの多くは実行時に生成する。Wordで作った4つの文書だけは`tests/fixtures/`に置いてあり、作成者や日時などのメタデータは消してある。
 日本語の本文は夏目漱石『吾輩は猫である』（青空文庫）、英語はLewis Carroll『Alice's Adventures in Wonderland』（Project Gutenberg）から取っている。
 出典と扱いは[TEST_DATA.md](TEST_DATA.md)にある。
 CIはGitHub ActionsでUbuntuとmacOS、Python 3.11〜3.13の組み合わせで回す。
