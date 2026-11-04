@@ -1,9 +1,10 @@
-# docx-review-tools
+# docx-redline-ja
 
 [日本語](README.md)
 
-Write AI proofreading results into a Word manuscript as tracked changes and
-comments. The tools run as Claude Code plugins or as standalone Python scripts.
+Write AI proofreading results into a Word manuscript as tracked changes. Even in
+Japanese, the tracked change covers only the characters that actually changed.
+The tool runs as a Claude Code plugin or as a standalone Python script.
 
 ## What it's for
 
@@ -12,26 +13,16 @@ as chat text. Applying them means opening Word, finding each passage, and fixing
 it by hand. With dozens of suggestions that takes a while, and afterward nobody
 can tell what was changed.
 
-These tools put the suggestions into the document as native Word tracked changes
-and comments. You then work through them in Word's normal review pane, accepting
-or rejecting each change and reading each comment, or pass the file straight to
-a co-author or editor.
+This tool puts the suggestions into the document as native Word tracked changes.
+You then work through them in Word's normal review pane, accepting or rejecting
+each one, or pass the file straight to a co-author or editor.
 
-The tools do not proofread anything themselves. They only write findings into
-the document. The findings come from Claude or from a separate proofreading or
+The tool does not proofread anything itself. It takes before/after pairs
+(`old_text` and `new_text`) and writes them into the document as tracked
+changes. The findings come from Claude or from a separate proofreading or
 peer-review skill.
 
-## Two plugins
-
-Each plugin installs on its own.
-
-- `docx-apply-redline` takes before/after pairs (`old_text` and `new_text`) and
-  writes them as tracked changes.
-- `docx-add-comment` attaches a comment to a given passage (`anchor_text`)
-  without changing a single character of the body. Use it for points the author
-  has to decide on, such as "State which statistical test was used."
-
-You can set the author name on revisions and comments. It defaults to `AI校正`
+You can set the author name on the revisions. It defaults to `AI校正`
 ("AI proofreading"), so the changes are easy to tell apart from a human's.
 
 ## Minimal redlines, even in Japanese
@@ -40,10 +31,10 @@ Given `{"old_text":"所見がみられか？","new_text":"所見がみられる�
 tracked change covers only the one inserted character, `る`.
 
 That sounds obvious, but word-level diff tools don't manage it for languages
-written without spaces. A Japanese paragraph has no spaces, so it is treated as
-one word, and changing a single character deletes and reinserts the whole
-paragraph. This tool diffs character by character, so the redline stays as small
-as the edit.
+written without spaces. Japanese has no spaces between words, so everything up
+to the next punctuation mark, and sometimes a whole paragraph, is treated as one
+word. Changing a single character then deletes and reinserts all of it. This
+tool diffs character by character, so the redline stays as small as the edit.
 
 `benchmarks/` applies the same 20 edits with each tool and counts the characters
 marked up. In Japanese this tool marks up 45, which is the theoretical minimum.
@@ -55,57 +46,57 @@ Anthropic's `docx` skill has no command for tracked changes, so Claude writes
 the revision XML by hand. The results are reasonable, but it costs much more
 time and many more tokens.
 
+There is no comment feature. To add Word comments for points the author has to
+decide on, use [Adeu](https://github.com/dealfluence/adeu) or the comment
+support in the `docx` skill.
+
 ## Safety
 
 - The input file is never modified. Output always goes to a separate file.
-- Everything runs locally, and no document content is sent to any service. That
-  makes the tools usable on unpublished or confidential manuscripts.
+- The redlining itself runs locally, and this tool sends no document content
+  anywhere. Note that having Claude proofread the manuscript does send it to
+  Claude.
 - If a passage occurs more than once, the tool cannot know which one is meant,
   so by default it skips that finding and reports why.
-- Before writing the output, the tools check that the package is valid OOXML.
-  For tracked changes they also check that rejecting every change restores the
-  original text. If a check fails, no file is written.
+- Before writing the output, the tool checks that rejecting every change
+  restores the original text, that other people's tracked changes are intact,
+  and that the XML and the revision markup are well formed. If any check fails,
+  no file is written.
+- Every part of the package other than the body (`word/document.xml`) is copied
+  through byte for byte.
 
 ## Use in Claude Code
 
 ```text
-/plugin marketplace add akchan/docx-review-tools
-/plugin install docx-apply-redline@docx-review-tools
-/plugin install docx-add-comment@docx-review-tools
+/plugin install docx-redline-ja --marketplace akchan/docx-redline-ja
 ```
 
-Install only the plugin you need. Python 3.11 or later and the packages in
-`requirements.txt` are required.
+Python 3.11 or later and `lxml` are required.
 
 Then ask Claude something like:
 
 ```text
 Proofread manuscript.docx, collect the findings in findings.jsonl, and apply
-them with docx-apply-redline as tracked changes.
+them with docx-redline-ja as tracked changes.
 ```
 
 ## Use without Claude Code
 
 ```bash
-python3 plugins/docx-apply-redline/skills/docx-apply-redline/scripts/apply_redline.py \
+python3 -m pip install -r requirements.txt
+python3 plugins/docx-redline-ja/skills/docx-redline-ja/scripts/apply_redline.py \
   --docx manuscript.docx --findings findings.jsonl --out reviewed.docx
-
-python3 plugins/docx-add-comment/skills/docx-add-comment/scripts/apply_comment.py \
-  --docx manuscript.docx --comments comments.jsonl --out commented.docx
 ```
 
-The input is JSONL, one finding per line. The first example is a tracked change
-and the second a comment:
+The input is JSONL, one finding per line:
 
 ```jsonl
 {"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
+{"old_text":"MRI検査","new_text":"MRI 検査","replace_all":true}
 ```
 
-```jsonl
-{"anchor_text":"主要評価項目","comment":"評価時点を明記してください。"}
-```
-
-See each plugin's `SKILL.md` and `references/` directory for the complete input
+See `SKILL.md` and the `references/` directory under
+`plugins/docx-redline-ja/skills/docx-redline-ja/` for the complete input
 contract, location syntax, verification fields, and skip reasons.
 
 ## Development
@@ -118,10 +109,9 @@ claude plugin validate .
 
 Japanese and English test DOCX files are generated during each test run from
 short excerpts of Natsume Soseki's *I Am a Cat* and Lewis Carroll's *Alice's
-Adventures in Wonderland*, both in the public domain. No private manuscripts or
-pre-generated document fixtures are stored in this repository. See
-`TEST_DATA.md` for sources.
+Adventures in Wonderland*, both in the public domain. See `TEST_DATA.md` for
+sources.
 
 ## License
 
-MIT. See `THIRD_PARTY_NOTICES.md` for bundled OOXML schemas and supporting code.
+MIT.
