@@ -54,8 +54,8 @@ support in the `docx` skill.
 
 - The input file is never modified. Output always goes to a separate file.
 - The redlining itself runs locally, and this tool sends no document content
-  anywhere. Note that having Claude proofread the manuscript does send it to
-  Claude.
+  anywhere. Note that having Claude or Codex proofread the manuscript does send it
+  to that service.
 - If a passage occurs more than once, the tool cannot know which one is meant,
   so by default it skips that finding and reports why.
 - Before writing the output, the tool checks that rejecting every change
@@ -68,7 +68,8 @@ support in the `docx` skill.
 ## Use in Claude Code
 
 ```text
-/plugin install docx-redline-ja --marketplace akchan/docx-redline-ja
+/plugin marketplace add akchan/docx-redline-ja
+/plugin install docx-redline-ja@docx-redline-ja
 ```
 
 Python 3.11 or later and `lxml` are required.
@@ -80,7 +81,18 @@ Proofread manuscript.docx, collect the findings in findings.jsonl, and apply
 them with docx-redline-ja as tracked changes.
 ```
 
-## Use without Claude Code
+## Use in Codex
+
+Install it in the Codex CLI with:
+
+```sh
+codex plugin marketplace add akchan/docx-redline-ja
+codex plugin add docx-redline-ja@docx-redline-ja
+```
+
+The requirements and the way to ask are the same as in Claude Code.
+
+## Run the script directly
 
 ```bash
 python3 -m pip install -r requirements.txt

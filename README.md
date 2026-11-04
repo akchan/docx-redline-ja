@@ -29,7 +29,7 @@ Anthropicの`docx`スキルには変更履歴を入れるコマンドがなく�
 ## 安全のための決まりごと
 
 - 元のファイルは書き換えず、別のファイルに書き出します。
-- 変更履歴を書き込む処理は手元のマシンだけで行い、このツールが文書の内容を外部に送ることはありません。ただし、Claudeに校正させる段階では原稿がClaudeに送られます。
+- 変更履歴を書き込む処理は手元のマシンだけで行い、このツールが文書の内容を外部に送ることはありません。ただし、ClaudeやCodexに校正させる段階では、原稿がそれぞれのサービスに送られます。
 - 指定した文字列が原稿の中に複数あるときは、どれを直すべきか決められないので、既定では書き込まずにスキップします。スキップした指摘は理由とともに報告します。
 - 書き出す前に、変更履歴をすべて却下すると元の文章に戻るか、ほかの人が入れた変更履歴を壊していないか、XMLと変更履歴の構造が正しいかを確かめます。1つでも確かめられなければファイルを書き出しません。
 - `.docx`の中身のうち、本文（`word/document.xml`）以外の部品は元のファイルと1バイトも変えません。
@@ -37,7 +37,8 @@ Anthropicの`docx`スキルには変更履歴を入れるコマンドがなく�
 ## Claude Codeで使う
 
 ```text
-/plugin install docx-redline-ja --marketplace akchan/docx-redline-ja
+/plugin marketplace add akchan/docx-redline-ja
+/plugin install docx-redline-ja@docx-redline-ja
 ```
 
 動かすにはPython 3.11以降と`lxml`が必要です。
@@ -48,7 +49,18 @@ Anthropicの`docx`スキルには変更履歴を入れるコマンドがなく�
 manuscript.docxを校正して、指摘をfindings.jsonlにまとめてから、docx-redline-jaで変更履歴として入れて
 ```
 
-## Claude Codeなしで使う
+## Codexで使う
+
+Codex CLIでは次のコマンドでインストールします。
+
+```sh
+codex plugin marketplace add akchan/docx-redline-ja
+codex plugin add docx-redline-ja@docx-redline-ja
+```
+
+必要なものと頼み方はClaude Codeと同じです。
+
+## スクリプトを直接使う
 
 ```bash
 python3 -m pip install -r requirements.txt
