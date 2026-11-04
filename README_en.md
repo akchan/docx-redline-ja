@@ -60,7 +60,7 @@ support in the `docx` skill.
   so by default it skips that finding and reports why.
 - Before writing the output, the tool checks that rejecting every change
   restores the original text, that other people's tracked changes are intact,
-  and that the XML and the revision markup are well formed. If any check fails,
+  and that the revision markup is well formed. If any check fails,
   no file is written.
 - Every part of the package other than the body (`word/document.xml`) is copied
   through byte for byte.
