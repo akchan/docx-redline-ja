@@ -22,8 +22,8 @@ The tool does not proofread anything itself. It takes before/after pairs
 changes. The findings come from Claude or from a separate proofreading or
 peer-review skill.
 
-You can set the author name on the revisions. It defaults to `AI校正`
-("AI proofreading"), so the changes are easy to tell apart from a human's.
+You can set the author name on the revisions. It defaults to `AI`,
+so the changes are easy to tell apart from a human's.
 
 ## Minimal redlines, even in Japanese
 
