@@ -60,6 +60,16 @@ codex plugin add docx-redline-ja@docx-redline-ja
 
 必要なものと頼み方はClaude Codeと同じです。
 
+## Claude Desktop（Cowork）で使う
+
+GitHubのリポジトリをマーケットプレイスとして追加します。
+
+1. CustomizeのPluginsで「+」を押し、Add marketplaceを選びます。
+2. `akchan/docx-redline-ja`を入力します。
+3. 一覧に出てくるdocx-redline-jaをインストールします。
+
+頼み方はClaude Codeと同じです。
+
 ## スクリプトを直接使う
 
 ```bash

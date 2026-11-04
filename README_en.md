@@ -92,6 +92,16 @@ codex plugin add docx-redline-ja@docx-redline-ja
 
 The requirements and the way to ask are the same as in Claude Code.
 
+## Use in Claude Desktop (Cowork)
+
+Add the GitHub repository as a marketplace.
+
+1. In Customize → Plugins, click + and choose Add marketplace.
+2. Enter `akchan/docx-redline-ja`.
+3. Install docx-redline-ja from the list.
+
+You ask for it the same way as in Claude Code.
+
 ## Run the script directly
 
 ```bash
