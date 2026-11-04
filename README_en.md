@@ -22,8 +22,10 @@ The tool does not proofread anything itself. It takes before/after pairs
 changes. The findings come from Claude or from a separate proofreading or
 peer-review skill.
 
-You can set the author name on the revisions. It defaults to `AI`,
-so the changes are easy to tell apart from a human's.
+You can set the author name on the revisions. When the skill runs it, the
+agent passes its own model name (e.g. `Claude Opus 5.5`), so the changes are
+easy to tell apart from a human's and you can see which model made them.
+Run by hand without `--author`, it falls back to `AI`.
 
 ## Minimal redlines, even in Japanese
 

@@ -94,10 +94,10 @@ UTF-8のJSON Linesで、1行に1件の指摘を書く。
 
 ```bash
 python3 <skill_dir>/scripts/apply_redline.py \
-  --docx 原稿.docx --findings findings.jsonl --out 校正済み.docx --author "AI"
+  --docx 原稿.docx --findings findings.jsonl --out 校正済み.docx --author "Claude Opus 5.5"
 ```
 
-- `--author`：変更履歴の著者名。Wordの校閲ペインに出る。
+- `--author`：変更履歴の著者名。Wordの校閲ペインに出る。スキルから呼ぶときは、エージェントが自分のモデル名を渡す。省略すると`AI`になる。
 - `--date`：変更履歴の日時（ISO 8601）。省略すると現在時刻（UTC）になる。固定すると出力が再現可能になる。
 
 `--out`は`.docx`で終わる必要があり、`--docx`、`--findings`、`--out`、レポートのうち2つが同じファイルを指すと何も書かずに終わる。
