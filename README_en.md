@@ -32,16 +32,73 @@ rewritten one; this skill marks only the characters that changed.
 
 ## Contents
 
-- [What it's for](#what-its-for)
-- [Minimal redlines, even in Japanese](#minimal-redlines-even-in-japanese)
-- [Cost and tokens](#cost-and-tokens)
-- [Safety](#safety)
 - [Use in Claude Code](#use-in-claude-code)
 - [Use in Codex](#use-in-codex)
 - [Use in Claude Desktop (Cowork)](#use-in-claude-desktop-cowork)
 - [Run the script directly](#run-the-script-directly)
+- [What it's for](#what-its-for)
+- [Minimal redlines, even in Japanese](#minimal-redlines-even-in-japanese)
+- [Cost and tokens](#cost-and-tokens)
+- [Safety](#safety)
 - [Development](#development)
 - [License](#license)
+
+## Use in Claude Code
+
+```text
+/plugin marketplace add akchan/docx-redline-ja
+/plugin install docx-redline-ja@docx-redline-ja
+```
+
+Python 3.11 or later and `lxml` are required.
+
+Then ask Claude something like:
+
+```text
+Proofread manuscript.docx, collect the findings in findings.jsonl, and apply
+them with docx-redline-ja as tracked changes.
+```
+
+## Use in Codex
+
+Install it in the Codex CLI with:
+
+```sh
+codex plugin marketplace add akchan/docx-redline-ja
+codex plugin add docx-redline-ja@docx-redline-ja
+```
+
+Then open `/skills` in Codex, or mention `$docx-redline-ja`, to use the skill.
+To install the skill alone, without the plugin, copy
+`plugins/docx-redline-ja/skills/docx-redline-ja/` into `~/.agents/skills/`.
+
+## Use in Claude Desktop (Cowork)
+
+1. Open Customize in the sidebar, then Plugins.
+2. Select Add marketplace and enter `akchan/docx-redline-ja`.
+3. Install docx-redline-ja from the list.
+
+An installed plugin is saved to your account, so it also works in regular chat
+and in Claude Code. You ask for it the same way as in Claude Code.
+
+## Run the script directly
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 plugins/docx-redline-ja/skills/docx-redline-ja/scripts/apply_redline.py \
+  --docx manuscript.docx --findings findings.jsonl --out reviewed.docx
+```
+
+The input is JSONL, one finding per line:
+
+```jsonl
+{"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
+{"old_text":"MRI検査","new_text":"MRI 検査","replace_all":true}
+```
+
+See `SKILL.md` and the `references/` directory under
+`plugins/docx-redline-ja/skills/docx-redline-ja/` for the complete input
+contract, location syntax, verification fields, and skip reasons.
 
 ## What it's for
 
@@ -135,82 +192,10 @@ python3 benchmarks/run_agentic.py --model claude-sonnet-5-5 --lang both --runs 3
 - Every part of the package other than the body (`word/document.xml`) is copied
   through byte for byte.
 
-## Use in Claude Code
-
-```text
-/plugin marketplace add akchan/docx-redline-ja
-/plugin install docx-redline-ja@docx-redline-ja
-```
-
-Python 3.11 or later and `lxml` are required.
-
-Then ask Claude something like:
-
-```text
-Proofread manuscript.docx, collect the findings in findings.jsonl, and apply
-them with docx-redline-ja as tracked changes.
-```
-
-## Use in Codex
-
-Install it in the Codex CLI with:
-
-```sh
-codex plugin marketplace add akchan/docx-redline-ja
-codex plugin add docx-redline-ja@docx-redline-ja
-```
-
-Then open `/skills` in Codex, or mention `$docx-redline-ja`, to use the skill.
-To install the skill alone, without the plugin, copy
-`plugins/docx-redline-ja/skills/docx-redline-ja/` into `~/.agents/skills/`.
-
-## Use in Claude Desktop (Cowork)
-
-1. Open Customize in the sidebar, then Plugins.
-2. Select Add marketplace and enter `akchan/docx-redline-ja`.
-3. Install docx-redline-ja from the list.
-
-An installed plugin is saved to your account, so it also works in regular chat
-and in Claude Code. You ask for it the same way as in Claude Code.
-
-## Run the script directly
-
-```bash
-python3 -m pip install -r requirements.txt
-python3 plugins/docx-redline-ja/skills/docx-redline-ja/scripts/apply_redline.py \
-  --docx manuscript.docx --findings findings.jsonl --out reviewed.docx
-```
-
-The input is JSONL, one finding per line:
-
-```jsonl
-{"old_text":"所見がみられか？","new_text":"所見がみられるか？"}
-{"old_text":"MRI検査","new_text":"MRI 検査","replace_all":true}
-```
-
-See `SKILL.md` and the `references/` directory under
-`plugins/docx-redline-ja/skills/docx-redline-ja/` for the complete input
-contract, location syntax, verification fields, and skip reasons.
-
 ## Development
 
-```bash
-python3 -m pip install -r requirements-dev.txt
-python3 -m pytest -q
-claude plugin validate .
-```
-
-Most test DOCX files are generated during each test run; four documents made in
-Word, with their personal metadata removed, live in `tests/fixtures/`. The text
-comes from short excerpts of Natsume Soseki's *I Am a Cat* and Lewis Carroll's *Alice's
-Adventures in Wonderland*, both in the public domain. See `TEST_DATA.md` for
-sources.
-
-The figure at the top is regenerated with `python3 tools/render_readme_example.py`.
-It builds a one-paragraph DOCX from the example sentence, applies the same
-findings with this skill and with docx-cli (`bunx bun-docx@0.28.0`), and draws
-the `w:del`/`w:ins` markup it reads back from both outputs. It needs Pillow,
-`bunx` and a Japanese font.
+How to run the tests and benchmarks and how to regenerate the figure at the top
+are in [docs/development_en.md](docs/development_en.md).
 
 ## License
 
